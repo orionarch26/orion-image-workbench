@@ -27,7 +27,7 @@ class ModelInstallerTests(unittest.TestCase):
     def test_verified_target_is_reused_without_network(self):
         dest=self.root/self.item['path'];dest.parent.mkdir();dest.write_bytes(self.data)
         def forbidden(*args,**kwargs):raise AssertionError('Unexpected network')
-        self.assertEqual(models.download(self.item,self.root,opener=forbidden),dest)
+        self.assertTrue(models.download(self.item,self.root,opener=forbidden).samefile(dest))
     def test_resume_and_atomic_completion(self):
         self.partial().write_bytes(self.data[:5])
         def opener(req,**kwargs):

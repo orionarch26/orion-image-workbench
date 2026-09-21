@@ -10,6 +10,8 @@ A lightweight browser workbench for ComfyUI, initially supporting **Qwen-Image-2
 
 UI preview with the bundled synthetic example and demonstration state; no private gallery.
 
+[![CI](https://github.com/orionarch26/orion-image-workbench/actions/workflows/ci.yml/badge.svg)](https://github.com/orionarch26/orion-image-workbench/actions/workflows/ci.yml)
+
 ## What it does
 
 - Simple creation studio and a professional parameter workbench.
@@ -25,7 +27,7 @@ UI preview with the bundled synthetic example and demonstration state; no privat
 | Area | Status |
 |---|---|
 | Linux + NVIDIA | Tested on an RTX 4070 Laptop with 8GB VRAM and 16GB RAM |
-| Windows model downloader | Standard-library implementation; Windows CI is configured, native Windows testing pending |
+| Windows model downloader | Independent downloader with a Windows/Linux CI matrix (Python 3.10 / 3.12) |
 | Full Windows application | Planned; application locking/process management still requires Linux |
 | Language | Application UI: Chinese. README/install instructions: English and Chinese. Complete UI i18n is planned |
 | Backend | Requires the documented ComfyUI and custom-node setup |

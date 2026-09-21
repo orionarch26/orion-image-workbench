@@ -13,7 +13,7 @@
 ## 当前版本边界
 
 - **已实测**：Linux、RTX 4070 Laptop 8GB、16GB内存。
-- **Windows**：模型下载脚本采用跨平台Python标准库，已配置Windows CI，等待实际运行结果；完整应用仍有Linux平台依赖，尚未宣称支持。
+- **Windows**：模型下载脚本采用跨平台Python标准库，提供Windows/Linux、Python 3.10 / 3.12测试矩阵；完整应用仍有Linux平台依赖，尚未宣称支持。
 - **语言**：当前界面为中文，README与安装说明已有中英文；完整界面i18n在路线图中。
 - 这是首个源码版本。模型下载器只安装模型文件，ComfyUI、PyTorch、驱动与节点环境需按安装说明准备。
 
