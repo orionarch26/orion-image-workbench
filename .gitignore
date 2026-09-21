@@ -1,0 +1,47 @@
+# Local runtimes and model weights
+/ComfyUI/
+/.venv/
+**/*.gguf
+**/*.safetensors
+**/*.ckpt
+**/*.pt
+**/*.pth
+**/*.part
+**/*.download.lock
+**/*.invalid-*
+# Personal data and machine configuration
+/output/
+/state/
+/logs/
+/.backups/
+/.omc/
+.env
+.env.*
+!.env.example
+studio.local.toml
+*.sqlite3
+*.sqlite3-*
+# Build and test artifacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.coverage
+htmlcov/
+/test-results/
+/playwright-report/
+/docs/*-test.json
+/docs/*-validation.json
+/docs/*-regression.json
+/docs/*-checks.json
+/docs/*-evidence.json
+/docs/*-active.json
+/docs/*.png
+# Explicitly curated public media belong under docs/media/.
+.DS_Store
+Thumbs.db
+
+# Generated validation reports are local artifacts.
+/docs/*.json

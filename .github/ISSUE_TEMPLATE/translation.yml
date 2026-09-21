@@ -1,0 +1,15 @@
+name: Translation / 翻译贡献
+description: Suggest a translation or localization improvement.
+body:
+  - type: input
+    id: locale
+    attributes:
+      label: Language / 语言
+    validations:
+      required: true
+  - type: textarea
+    id: translation
+    attributes:
+      label: Location, current text and suggested text / 位置、原文与建议
+    validations:
+      required: true

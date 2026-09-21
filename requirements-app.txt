@@ -1,0 +1,4 @@
+# Tested lightweight application dependencies. GPU runtime is managed by ComfyUI.
+aiohttp==3.14.3
+Pillow==12.3.0
+markdown-it-py==4.2.0

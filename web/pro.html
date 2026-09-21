@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>专业工作台 · Qwen Image</title>
+        <link rel="stylesheet" href="/static/pro.css" />
+        <script src="/static/pro.js" defer></script>
+    </head>
+    <body>
+        <header class="studio-header">
+            <a class="studio-brand" href="/" aria-label="猎户画室首页"
+                ><span class="studio-brand-icon" aria-hidden="true"
+                    ><svg viewBox="0 0 24 24">
+                        <path d="m12 3 9 5-9 5-9-5Z" />
+                        <path d="m3 12 9 5 9-5M3 16l9 5 9-5" /></svg></span
+                ><span class="studio-brand-copy"
+                    ><strong>猎户画室</strong
+                    ><small>Qwen Image 2.1</small></span
+                ></a
+            >
+            <nav class="studio-navigation" aria-label="主导航">
+                <a class="studio-nav-link" href="/"
+                    ><svg viewBox="0 0 24 24" aria-hidden="true">
+                        <rect x="3" y="3" width="18" height="18" rx="4" />
+                        <path d="m3 15 5-5 5 5 3-3 5 5" />
+                        <circle cx="16" cy="8" r="1" /></svg
+                    ><span>创作画室</span></a
+                ><a class="studio-nav-link" href="/pro" aria-current="page"
+                    ><svg viewBox="0 0 24 24" aria-hidden="true">
+                        <rect x="3" y="4" width="6" height="6" rx="1.5" />
+                        <rect x="15" y="14" width="6" height="6" rx="1.5" />
+                        <path d="M9 7h6a3 3 0 0 1 3 3v4M6 10v7h9" /></svg
+                    ><span>专业工作台</span></a
+                ><a class="studio-nav-link" href="/help"
+                    ><svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path
+                            d="M12 5v15M3 4h5a4 4 0 0 1 4 2 4 4 0 0 1 4-2h5v15h-5a5 5 0 0 0-4 1 5 5 0 0 0-4-1H3Z"
+                        /></svg
+                    ><span>使用指南</span></a
+                >
+            </nav>
+            <div class="studio-service">
+                <span class="studio-local">LOCAL WORKSPACE</span
+                ><span id="connection" class="studio-health" role="status"
+                    >检查服务…</span
+                >
+            </div>
+        </header>
+        <div class="workspace">
+            <aside class="library">
+                <div class="eyebrow">WORKFLOW LIBRARY</div>
+                <h1>工作流库</h1>
+                <p class="muted">选择起点，建立自己的创作配方。</p>
+                <div id="builtins"></div>
+                <div class="section-label">
+                    我的预设 <span id="preset-count">0</span>
+                </div>
+                <div id="presets" class="preset-list"></div>
+                <label for="preset-name">预设名称</label
+                ><input
+                    id="preset-name"
+                    maxlength="80"
+                    placeholder="例如：柔光产品摄影"
+                /><button id="save-preset">保存 / 覆盖同名预设</button>
+                <div class="pair">
+                    <button id="export" class="quiet">导出配方</button
+                    ><button id="import" class="quiet">导入配方</button>
+                </div>
+                <input
+                    id="import-file"
+                    type="file"
+                    accept=".json,application/json"
+                    hidden
+                />
+                <div class="library-note">
+                    <span class="dot"></span> 本机推理 · 独立草稿
+                    <p>与快速创作共用模型、作品和任务队列。</p>
+                    <p id="model-name"></p>
+                </div>
+            </aside>
+            <main>
+                <div class="titlebar">
+                    <div>
+                        <div class="eyebrow">QWEN IMAGE 2.1 / WORKBENCH</div>
+                        <h2>让每一次调整都有依据。</h2>
+                    </div>
+                    <span class="pill">本地工作流</span>
+                </div>
+                <section class="flow-panel">
+                    <div class="section-heading">
+                        <h3>生成流程</h3>
+                        <button id="inspect" class="text-button">
+                            查看 API 工作流 ↗
+                        </button>
+                    </div>
+                    <div class="flow" id="flow">
+                        <button data-section="input-section">
+                            <em>01</em><strong>输入与参考</strong
+                            ><small id="flow-input">文字生成</small></button
+                        ><span>→</span
+                        ><button data-section="sampling-section">
+                            <em>02</em><strong>条件与采样</strong
+                            ><small id="flow-sample"
+                                >Euler · 40 步</small
+                            ></button
+                        ><span>→</span
+                        ><button data-section="output-section">
+                            <em>03</em><strong>解码与输出</strong
+                            ><small id="flow-output">1024 × 1024</small>
+                        </button>
+                    </div>
+                    <p id="validation" class="muted">参数校验中…</p>
+                    <button id="validate-again" class="quiet" hidden>
+                        重新校验
+                    </button>
+                    <div
+                        id="warnings"
+                        class="warnings"
+                        aria-live="polite"
+                    ></div>
+                </section>
+                <div class="viewer-tabs">
+                    <button id="view-result" aria-pressed="true">
+                        作品预览</button
+                    ><button id="view-compare" aria-pressed="false">
+                        A / B 对比 <span id="compare-count">0/2</span>
+                    </button>
+                </div>
+                <section id="result-view" class="viewer">
+                    <div id="canvas" class="canvas">
+                        <div class="empty">
+                            <div class="empty-symbol">✳</div>
+                            <h3>从一个好的起点开始</h3>
+                            <p>
+                                左侧选择配方，右侧精调参数。<br />生成后在这里检查细节、固定种子，继续优化。
+                            </p>
+                        </div>
+                    </div>
+                    <div id="result-detail" class="result-detail" hidden></div>
+                    <div id="result-actions" class="actions"></div>
+                </section>
+                <section id="compare-view" class="viewer" hidden>
+                    <p class="muted">
+                        从作品中设置 A 与
+                        B。先固定种子，再只改变一个参数；不同尺寸的图片按比例展示。
+                    </p>
+                    <label for="compare-zoom">细节检查</label
+                    ><select id="compare-zoom">
+                        <option value="fit">适应窗口</option>
+                        <option value="1">原始像素 100%</option>
+                        <option value="2">放大 200%</option>
+                    </select>
+                    <p class="hint">
+                        放大后滚动任意一侧，两张图片同步移动到相同比例的位置。
+                    </p>
+                    <div id="compare-images" class="compare-images"></div>
+                    <div class="table-scroll">
+                        <table id="compare-table"></table>
+                    </div>
+                </section>
+                <section class="history-section">
+                    <div class="section-heading">
+                        <h3>作品档案</h3>
+                        <button id="refresh" class="text-button">刷新</button>
+                    </div>
+                    <div id="gallery" class="gallery"></div>
+                    <button id="more" class="quiet" hidden>加载更多</button>
+                </section>
+                <section>
+                    <div class="section-heading">
+                        <h3>任务队列</h3>
+                        <small>与快速创作共享</small>
+                    </div>
+                    <div id="batches" class="batches"></div>
+                    <div id="jobs" class="jobs"></div>
+                </section>
+            </main>
+            <aside class="inspector">
+                <div class="inspector-heading">
+                    <h2>参数编辑器</h2>
+                    <span id="draft-status" class="muted">草稿自动保存</span>
+                </div>
+                <form id="parameters">
+                    <section id="input-section">
+                        <div class="section-label">01 / 输入与参考</div>
+                        <label for="mode">创作模式</label
+                        ><select id="mode">
+                            <option value="text">文字生成图片</option>
+                            <option value="edit">参考图编辑</option>
+                            <option value="transparent">透明 PNG</option>
+                        </select>
+                        <label for="prompt"
+                            >正面提示词 <span>描述目标画面</span></label
+                        ><textarea
+                            id="prompt"
+                            rows="6"
+                            maxlength="6000"
+                            required
+                            placeholder="主体、场景、构图、光线、材质，以及希望保留的细节…"
+                        ></textarea>
+                        <div id="reference-box" hidden>
+                            <label for="upload"
+                                >参考图片
+                                <span>按图1、图2、图3描述</span></label
+                            ><input
+                                id="upload"
+                                type="file"
+                                accept="image/png,image/jpeg,image/webp"
+                                multiple
+                            />
+                            <div id="references" class="references"></div>
+                            <label for="resolution">参考图处理大小</label
+                            ><select id="resolution">
+                                <option>512</option>
+                                <option selected>768</option>
+                                <option>1024</option>
+                            </select>
+                            <p class="hint">
+                                输出跟随图1比例。可调整参考顺序；原生编辑不提供像素锁定。
+                            </p>
+                        </div>
+                        <details>
+                            <summary>负面提示词</summary>
+                            <textarea
+                                id="negative_prompt"
+                                rows="3"
+                                maxlength="6000"
+                                placeholder="仅在 CFG 大于 1 时参与条件引导"
+                            ></textarea>
+                            <p class="hint">
+                                默认 CFG=1 不使用负条件采样；提高 CFG
+                                不保证更好效果。
+                            </p>
+                        </details>
+                    </section>
+                    <section id="sampling-section">
+                        <div class="section-label">02 / 条件与采样</div>
+                        <div class="pair">
+                            <div>
+                                <label for="steps">采样步数</label
+                                ><input
+                                    id="steps"
+                                    type="number"
+                                    min="1"
+                                    max="60"
+                                    value="40"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label for="cfg">CFG 引导</label
+                                ><input
+                                    id="cfg"
+                                    type="number"
+                                    min="1"
+                                    max="6"
+                                    step="0.1"
+                                    value="1"
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <p class="hint">20步选构图，40步成图；CFG从1开始。</p>
+                        <div class="pair">
+                            <div>
+                                <label for="sampler">采样器</label
+                                ><select id="sampler">
+                                    <option value="euler">Euler · 推荐</option>
+                                    <option value="heun">Heun · 实验</option>
+                                    <option value="dpmpp_2m">
+                                        DPM++ 2M · 实验
+                                    </option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="scheduler">调度器</label
+                                ><select id="scheduler">
+                                    <option value="simple">
+                                        Simple · 推荐
+                                    </option>
+                                    <option value="normal">
+                                        Normal · 实验
+                                    </option>
+                                    <option value="beta">Beta · 实验</option>
+                                    <option value="karras">
+                                        Karras · 实验
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <label for="seed">随机种子</label>
+                        <div class="seed-row">
+                            <input
+                                id="seed"
+                                type="number"
+                                min="-1"
+                                max="4294967295"
+                                value="-1"
+                                required
+                            /><button
+                                id="random"
+                                type="button"
+                                class="quiet"
+                                title="设为每次随机"
+                            >
+                                随机
+                            </button>
+                        </div>
+                        <p class="hint">
+                            -1每次随机。对比参数时使用同一个固定数字。
+                        </p>
+                    </section>
+                    <section id="output-section">
+                        <div class="section-label">03 / 画布与资源</div>
+                        <div id="canvas-size">
+                            <label for="size">画幅预设</label
+                            ><select id="size">
+                                <option value="1024,1024">
+                                    方形 · 1024 × 1024
+                                </option>
+                                <option value="832,1216">
+                                    竖图 · 832 × 1216
+                                </option>
+                                <option value="1216,832">
+                                    横图 · 1216 × 832
+                                </option>
+                                <option value="768,768">
+                                    快速探索 · 768 × 768
+                                </option>
+                                <option value="custom">自定义</option>
+                            </select>
+                            <div class="pair">
+                                <div>
+                                    <label for="width">宽</label
+                                    ><input
+                                        id="width"
+                                        type="number"
+                                        min="512"
+                                        max="1536"
+                                        step="32"
+                                        value="1024"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label for="height">高</label
+                                    ><input
+                                        id="height"
+                                        type="number"
+                                        min="512"
+                                        max="1536"
+                                        step="32"
+                                        value="1024"
+                                        required
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <details>
+                            <summary>缓存与解码</summary>
+                            <label for="cache_dtype">KV 缓存精度</label
+                            ><select id="cache_dtype">
+                                <option value="auto">
+                                    自动 · 文生图default / 改图int8
+                                </option>
+                                <option value="default">
+                                    Default · 无损缓存
+                                </option>
+                                <option value="int8">
+                                    INT8 · 减少缓存占用
+                                </option>
+                                <option value="int4">
+                                    INT4 · 实验，有精度损失
+                                </option></select
+                            ><label for="cache_device">缓存位置</label
+                            ><select id="cache_device">
+                                <option value="auto">自动分配 · 推荐</option>
+                                <option value="cpu">CPU / 系统内存</option>
+                                <option value="gpu">强制 GPU</option>
+                                <option value="off">
+                                    关闭缓存 · 诊断用
+                                </option></select
+                            ><label for="tile_size">VAE 解码分块</label
+                            ><select id="tile_size">
+                                <option value="256">256 · 小分块</option>
+                                <option value="512" selected>512 · 推荐</option>
+                                <option value="768">768 · 大分块</option>
+                            </select>
+                            <p class="hint">
+                                这些选项控制缓存和解码资源，不会改变模型权重量化。更大分块可能增加显存需求。
+                            </p>
+                        </details>
+                    </section>
+                    <section id="batch-section">
+                        <div class="section-label">04 / 批量与实验</div>
+                        <label for="run-kind">提交方式</label>
+                        <select id="run-kind">
+                            <option value="single">单张生成</option>
+                            <option value="seeds">连续换种子</option>
+                            <option value="experiment">单变量对比实验</option>
+                        </select>
+                        <div id="batch-options" hidden>
+                            <div id="batch-count-box">
+                                <label for="batch-count">图片数量</label
+                                ><input
+                                    id="batch-count"
+                                    type="number"
+                                    min="2"
+                                    max="5"
+                                    value="3"
+                                />
+                            </div>
+                            <div id="experiment-options" hidden>
+                                <label for="batch-axis">只改变一个参数</label
+                                ><select id="batch-axis">
+                                    <option value="steps">步数</option>
+                                    <option value="cfg">CFG 引导</option>
+                                    <option value="sampler">采样器</option>
+                                    <option value="scheduler">调度器</option>
+                                    <option value="cache_dtype">
+                                        缓存精度
+                                    </option>
+                                    <option value="tile_size">
+                                        VAE 分块
+                                    </option></select
+                                ><label for="batch-values"
+                                    >实验值（英文逗号分隔）</label
+                                ><input id="batch-values" value="20, 30, 40" />
+                            </div>
+                            <p id="batch-hint" class="hint"></p>
+                            <p class="hint">
+                                单个模型后端依次执行；提交后可以离开页面。队列与创作画室共享，整组参数在提交时固定。
+                            </p>
+                        </div>
+                    </section>
+                </form>
+                <div class="run-panel">
+                    <div class="section-heading">
+                        <div id="run-summary">40步 · 1024 × 1024</div>
+                        <button
+                            id="batch-shortcut"
+                            type="button"
+                            class="text-button"
+                        >
+                            批量 / 实验
+                        </button>
+                    </div>
+                    <button id="run" class="primary" disabled>
+                        运行工作流 <span>↗</span></button
+                    ><button id="retry" class="quiet" hidden>
+                        重试同一次提交</button
+                    ><progress id="progress" hidden></progress>
+                    <p id="message" role="status" aria-live="polite">
+                        准备就绪
+                    </p>
+                    <div id="active-actions" class="actions"></div>
+                </div>
+            </aside>
+        </div>
+        <dialog id="graph-dialog">
+            <div class="section-heading">
+                <h3>编译后的工作流</h3>
+                <button id="close-dialog" class="quiet">关闭</button>
+            </div>
+            <p class="muted">
+                与实际提交使用同一构建器。随机种子在运行时确定；这是 API
+                节点图，可导出供高级调试。
+            </p>
+            <pre id="graph-json"></pre>
+            <button id="export-graph">导出 API JSON</button>
+        </dialog>
+    </body>
+</html>

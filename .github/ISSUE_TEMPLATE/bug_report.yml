@@ -1,0 +1,28 @@
+name: Bug report / 问题反馈
+description: Report a reproducible problem without personal data.
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened? / 问题描述
+      description: Describe expected and actual behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction / 复现步骤
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment / 环境
+      description: OS, Python, application commit, ComfyUI/node versions, GPU and VRAM.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Sanitized error / 已去除个人信息的错误
+      description: Do not attach credentials, full databases, personal galleries or private prompts.

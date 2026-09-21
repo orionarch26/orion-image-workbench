@@ -1,0 +1,21 @@
+[server]
+backend_port = 8188
+ui_port = 7860
+queue_limit = 5
+task_timeout = 1800
+poll_interval = 1.5
+
+[models]
+diffusion_models = "qwen_image_2.1-Q4_K.gguf"
+text_encoders = "qwen3vl_8b_w4a8.safetensors"
+vae = "qwen_image_2.1_vae_bf16.safetensors"
+
+[generation]
+preview_steps = 20
+standard_steps = 40
+max_side = 1536
+max_pixels = 1600000
+max_references = 3
+max_aspect_ratio = 4
+reference_resolutions = [512, 768, 1024]
+sizes = [[1024,1024], [1216,832], [832,1216], [1344,768], [768,1344], [768,768]]
