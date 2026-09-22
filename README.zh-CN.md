@@ -1,5 +1,7 @@
 # Orion Image Workbench · 猎户画室
 
+**固定版本：[v0.1.0](https://github.com/orionarch26/orion-image-workbench/releases/tag/v0.1.0)** · [版本说明](docs/releases/v0.1.0.md)。`main` 用于后续开发。
+
 **本地生图、批量创作与可复现的工作流实验。**
 
 [English](README.md) · [安装说明](docs/zh-CN/installation.md) · [专业工作台指南](docs/PRO_GUIDE.md) · [参与贡献](CONTRIBUTING.md)
@@ -22,7 +24,7 @@
 前置条件：Git、Python 3.12、兼容NVIDIA驱动，以及安装说明中的 `ComfyUI/.venv` 和节点。首次clone请先阅读[完整安装说明](docs/zh-CN/installation.md)。
 
 ```bash
-git clone https://github.com/orionarch26/orion-image-workbench.git
+git clone --branch v0.1.0 --depth 1 https://github.com/orionarch26/orion-image-workbench.git
 cd orion-image-workbench
 
 # 先按安装说明准备ComfyUI环境，再查看模型清单：

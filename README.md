@@ -1,5 +1,7 @@
 # Orion Image Workbench
 
+**Pinned release: [v0.1.0](https://github.com/orionarch26/orion-image-workbench/releases/tag/v0.1.0)** · [Release notes](docs/releases/v0.1.0.md). `main` continues development.
+
 **Local image generation, sequential batches, and reproducible workflow experiments.**
 
 [简体中文](README.zh-CN.md) · [Installation](docs/en/installation.md) · [Workbench guide](docs/PRO_GUIDE.md) · [Contributing](CONTRIBUTING.md)
@@ -39,7 +41,7 @@ This is an initial source release. Downloading the models alone does **not** ins
 Prerequisites: Git, Python 3.12, compatible NVIDIA driver, the documented ComfyUI environment at `ComfyUI/.venv`, and required custom nodes. See [fresh checkout setup](docs/en/installation.md).
 
 ```bash
-git clone https://github.com/orionarch26/orion-image-workbench.git
+git clone --branch v0.1.0 --depth 1 https://github.com/orionarch26/orion-image-workbench.git
 cd orion-image-workbench
 
 # First prepare ComfyUI and its Python environment as described in the guide.
