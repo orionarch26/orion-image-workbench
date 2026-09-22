@@ -12,7 +12,7 @@ args=argparse.ArgumentParser();args.add_argument('--generate',action='store_true
 report={'checks':[]}
 with sync_playwright() as pw:
     browser=pw.chromium.launch(headless=True,args=['--disable-gpu'])
-    page=browser.new_page(viewport={'width':1600,'height':1050})
+    page=browser.new_page(locale="zh-CN",viewport={'width':1600,'height':1050})
     errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
     page.goto(URL+'/pro')
     page.wait_for_function("!document.querySelector('#run').disabled")

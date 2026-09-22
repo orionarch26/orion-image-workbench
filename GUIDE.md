@@ -2,7 +2,7 @@
 
 [安装 / Installation](docs/zh-CN/installation.md) · [English setup](docs/en/installation.md) · [专业工作台](docs/PRO_GUIDE.md)
 
-安装完成后运行 `./start.sh`，打开 http://127.0.0.1:7860 。选择模板，修改描述，点击生成。
+安装完成后运行 `./start.sh`，打开 http://127.0.0.1:7860 。选择模板，修改描述，点击生成。导航栏可切换 English / 简体中文；语言偏好会保存，切换不会改变草稿或任务。
 
 专业页 http://127.0.0.1:7860/pro 支持批量、参数实验、参考图排序、配方版本和A/B。
 
@@ -12,4 +12,4 @@
 
 模型文件不随Git仓库发布。运行 `python3 scripts/download_models.py --list` 查看来源，`python3 scripts/download_models.py` 下载，`--check` 完整校验。
 
-所有支持状态、环境前提、数据位置及许可见README和安装说明。当前完整应用在Linux NVIDIA环境验证，Windows应用与完整双语UI仍在路线图中。
+所有支持状态、环境前提、数据位置及许可见README和安装说明。当前完整应用在Linux NVIDIA环境验证，应用界面可在导航栏切换中英文；Windows 完整应用仍在路线图中。

@@ -1,6 +1,6 @@
 # Orion Image Workbench
 
-**Pinned release: [v0.1.0](https://github.com/orionarch26/orion-image-workbench/releases/tag/v0.1.0)** · [Release notes](docs/releases/v0.1.0.md). `main` continues development.
+**Pinned release: [v0.2.0](https://github.com/orionarch26/orion-image-workbench/releases/tag/v0.2.0)** · [Release notes](docs/releases/v0.2.0.md). `main` continues development.
 
 **Local image generation, sequential batches, and reproducible workflow experiments.**
 
@@ -31,7 +31,7 @@ UI preview with the bundled synthetic example and demonstration state; no privat
 | Linux + NVIDIA | Tested on an RTX 4070 Laptop with 8GB VRAM and 16GB RAM |
 | Windows model downloader | Independent downloader with a Windows/Linux CI matrix (Python 3.10 / 3.12) |
 | Full Windows application | Planned; application locking/process management still requires Linux |
-| Language | Application UI: Chinese. README/install instructions: English and Chinese. Complete UI i18n is planned |
+| Language | English / Simplified Chinese UI, in-app guides and installation docs; persistent language selector |
 | Backend | Requires the documented ComfyUI and custom-node setup |
 
 This is an initial source release. Downloading the models alone does **not** install ComfyUI, PyTorch, CUDA support or custom nodes. Use the [installation guide](docs/en/installation.md) to prepare the backend. No hosted inference API key is required; model licenses apply separately.
@@ -41,7 +41,7 @@ This is an initial source release. Downloading the models alone does **not** ins
 Prerequisites: Git, Python 3.12, compatible NVIDIA driver, the documented ComfyUI environment at `ComfyUI/.venv`, and required custom nodes. See [fresh checkout setup](docs/en/installation.md).
 
 ```bash
-git clone --branch v0.1.0 --depth 1 https://github.com/orionarch26/orion-image-workbench.git
+git clone --branch v0.2.0 --depth 1 https://github.com/orionarch26/orion-image-workbench.git
 cd orion-image-workbench
 
 # First prepare ComfyUI and its Python environment as described in the guide.
@@ -87,6 +87,10 @@ py -3 scripts/download_models.py --models-dir 'D:\ComfyUI\models' --check
 After reading and accepting the linked model license, unattended installation can use `--accept-model-license`. Existing valid files are reused. Interrupted downloads remain as `.part` files and resume on rerun. A mismatched existing model is not replaced unless you specify `--replace-invalid`; the replacement is installed only after its SHA-256 passes. The installer never silently changes quantization or upgrades a model revision.
 
 A normal startup checks for missing configured files, not the full hash of 11GB of weights. Use `--check` for integrity verification. Custom model filenames are not automatically substituted with this profile.
+
+## Interface language
+
+Use the **English / 简体中文** selector in the header. The initial language follows your browser (Chinese locales → Simplified Chinese, otherwise English). An explicit choice persists across pages and browser sessions. Switching languages preserves prompts, seeds, references, task tracking and pending submission IDs. User text and historical records are never translated. Terminal diagnostics and raw third-party errors may retain their original language.
 
 ## First workflow
 

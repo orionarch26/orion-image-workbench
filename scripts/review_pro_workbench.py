@@ -17,7 +17,7 @@ def job(id,**changes):
 with sync_playwright() as pw:
  browser=pw.chromium.launch(headless=True,args=['--disable-gpu'])
  def setup(initial=None):
-  page=browser.new_page();state={'requests':[],'held':{},'responses':{},'hold':set(),'pending':[],'posts':[]}
+  page=browser.new_page(locale="zh-CN");state={'requests':[],'held':{},'responses':{},'hold':set(),'pending':[],'posts':[]}
   if initial:page.add_init_script('for (const [k,v] of Object.entries('+json.dumps(initial)+')) localStorage.setItem(k,JSON.stringify(v));')
   def handler(route):
    path=route.request.url.removeprefix(URL);state['requests'].append(path)

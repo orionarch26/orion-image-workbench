@@ -110,3 +110,21 @@ header.studio-header {
   .studio-header .studio-nav-link svg {width:15px;height:15px;}
 }
 @media(prefers-reduced-motion:reduce){.studio-header .studio-nav-link{transition:none;}}
+
+/* Language control stays reachable in both navigation layouts. */
+.locale-select { width: auto; max-width: 140px; min-width: 100px; margin: 0; padding: 6px 9px; font-size: 13px; flex-shrink: 0; }
+html[lang="en"] .studio-brand-copy strong { font-size: 15px; }
+html[lang="en"] .studio-header { gap: 12px; flex-wrap: wrap; }
+html[lang="en"] button { white-space: normal; }
+@media (max-width: 760px) { .locale-select { margin-left: auto; } html[lang="en"] .studio-brand-copy strong { font-size: 13px; } }
+
+header.studio-header { grid-template-columns: minmax(210px, 1fr) auto auto minmax(130px, 1fr); gap: 16px; }
+label > span[data-i18n] { float: none; color: inherit; font: inherit; }
+label > span:not([data-i18n]) { margin-left: 8px; }
+@media (max-width: 760px) {
+  header.studio-header { height: auto; min-height: 110px; grid-template-columns: 1fr auto; gap: 10px; padding: 12px 16px; }
+  .studio-header .studio-brand { grid-column: 1; grid-row: 1; }
+  .studio-header .locale-select { grid-column: 2; grid-row: 1; }
+  .studio-header .studio-navigation { grid-column: 1 / -1; grid-row: 2; width: 100%; }
+  .studio-header .studio-service { display: none; }
+}

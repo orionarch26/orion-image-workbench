@@ -9,7 +9,7 @@ from studio_app.config import EXAMPLES,GENERATION,MODELS
 URL='http://127.0.0.1:7897'
 with sync_playwright() as pw:
     browser=pw.chromium.launch(headless=True,args=['--disable-gpu'])
-    page=browser.new_page(viewport={'width':1600,'height':1050})
+    page=browser.new_page(locale="zh-CN",viewport={'width':1600,'height':1050})
     def route(r):
         path=r.request.url.removeprefix(URL)
         if path=='/pro':return r.fulfill(body=(ROOT/'web/pro.html').read_bytes(),content_type='text/html')

@@ -27,7 +27,7 @@ Do not add model weights, environments, user outputs, SQLite databases, credenti
 
 ## Internationalization
 
-Full UI internationalization is planned, not completed. Follow [i18n.md](docs/i18n.md): use stable semantic message IDs, do not translate user prompts or API enums, and test language switches during active jobs. Documentation translations should preserve platform limitations and model-license distinctions.
+English and Simplified Chinese UI are implemented. Follow [i18n.md](docs/i18n.md): use stable semantic message IDs, do not translate user prompts or API enums, and test language switches during active jobs. Documentation translations should preserve platform limitations and model-license distinctions.
 
 ## Licensing
 

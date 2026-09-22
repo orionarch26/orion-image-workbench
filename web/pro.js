@@ -52,19 +52,19 @@ const terminal = new Set([
   "lost",
 ]);
 const names = {
-  queued: "等待提交",
-  submitting: "提交中",
-  backend_queued: "后端排队",
-  running: "生成中",
-  reconnecting: "重新连接",
-  downloading: "保存图片",
-  done: "完成",
-  failed: "失败",
-  cancelled: "已取消",
-  cancelling: "取消中",
-  timed_out: "超时",
-  lost: "记录缺失",
-  submission_unknown: "提交待核对",
+  queued: I18n.msg("ui.waiting_to_submit"),
+  submitting: I18n.msg("ui.submitting"),
+  backend_queued: I18n.msg("ui.queued_in_backend"),
+  running: I18n.msg("ui.generating"),
+  reconnecting: I18n.msg("ui.reconnecting_68891"),
+  downloading: I18n.msg("server.saving_images"),
+  done: I18n.msg("ui.done"),
+  failed: I18n.msg("ui.failed"),
+  cancelled: I18n.msg("ui.cancelled"),
+  cancelling: I18n.msg("ui.cancelling"),
+  timed_out: I18n.msg("ui.timed_out_e512c"),
+  lost: I18n.msg("ui.record_missing"),
+  submission_unknown: I18n.msg("ui.submission_needs_review_70ff5"),
 };
 let refs = [],
   compiled = null,
@@ -100,7 +100,7 @@ function persist(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
 }
 function message(text, error = false) {
-  $("message").textContent = text;
+  I18n.text($("message"), text);
   $("message").className = error ? "error" : "";
 }
 async function api(path, data, headers = {}) {
@@ -118,12 +118,12 @@ async function api(path, data, headers = {}) {
   try {
     result = await response.json();
   } catch {
-    const e = new Error(`服务响应异常 (${response.status})`);
+    const e = I18n.error(I18n.msg("ui.invalid_server_response_p0", {p0: response.status}));
     e.status = response.status;
     throw e;
   }
   if (!response.ok) {
-    const e = new Error(result.error || `请求失败 (${response.status})`);
+    const e = I18n.error(result.error || I18n.msg("ui.request_failed_p0_85a3f", {p0: response.status}));
     e.status = response.status;
     throw e;
   }
@@ -132,7 +132,7 @@ async function api(path, data, headers = {}) {
 function act(label, fn, parent, cls = "") {
   const b = document.createElement("button");
   b.type = "button";
-  b.textContent = label;
+  I18n.text(b, label);
   b.className = cls;
   b.onclick = () =>
     Promise.resolve()
@@ -161,13 +161,13 @@ function change() {
   revision++;
   validationFailures = 0;
   persist("proDraft", { parameters: payload(), references: refs });
-  $("draft-status").textContent = "草稿已保存";
+  I18n.text($("draft-status"), I18n.msg("ui.draft_saved"));
   $("reference-box").hidden = $("mode").value === "text";
   $("canvas-size").hidden =
     $("mode").value === "edit" ||
     ($("mode").value === "transparent" && refs.length > 0);
-  $("validation").textContent = "校验当前草稿…";
-  $("run-summary").textContent = "等待当前参数校验…";
+  I18n.text($("validation"), I18n.msg("ui.validating_draft"));
+  I18n.text($("run-summary"), I18n.msg("ui.waiting_for_validation"));
   controls();
   clearTimeout(timer);
   timer = setTimeout(validate, 350);
@@ -180,33 +180,30 @@ async function validate() {
     compiled = data;
     validationFailures = 0;
     $("validate-again").hidden = true;
-    $("flow-input").textContent = {
-      text: "文字生成",
-      edit: `${refs.length}张参考图`,
-      transparent: "RGBA 透明素材",
-    }[data.payload.mode];
-    $("flow-sample").textContent =
-      `${data.payload.sampler || "euler"} · ${data.payload.steps} 步`;
-    $("flow-output").textContent = data.actual_size.join(" × ");
-    $("run-summary").textContent =
-      `${data.payload.steps}步 · CFG ${data.payload.cfg || 1} · ${data.actual_size.join(" × ")}`;
-    $("validation").textContent =
-      `✓ 参数已校验 · ${Object.keys(data.workflow).length}个节点 · 缓存 ${data.workflow["2"].inputs.dtype}`;
+    I18n.text($("flow-input"), {
+      text: I18n.msg("ui.text_generation"),
+      edit: I18n.msg("ui.p0_reference_images", {p0: refs.length}),
+      transparent: I18n.msg("ui.rgba_transparent_asset"),
+    }[data.payload.mode]);
+    I18n.text($("flow-sample"), I18n.msg("ui.p0_p1_steps", {p0: data.payload.sampler || "euler", p1: data.payload.steps}));
+    I18n.text($("flow-output"), I18n.parts(data.actual_size, " × "));
+    I18n.text($("run-summary"), I18n.msg("ui.p0_steps_cfg_p1_p2", {p0: data.payload.steps, p1: data.payload.cfg || 1, p2: I18n.parts(data.actual_size, " × ")}));
+    I18n.text($("validation"), I18n.msg("ui.validated_p0_nodes_cache_p1", {p0: Object.keys(data.workflow).length, p1: data.workflow["2"].inputs.dtype}));
     $("validation").className = "muted";
     $("warnings").replaceChildren(
       ...data.warnings.map((text) => {
         const p = document.createElement("p");
-        p.textContent = text;
+        I18n.text(p, I18n.server(text));
         return p;
       }),
     );
-    $("model-name").textContent = data.models.diffusion_models;
+    I18n.text($("model-name"), data.models.diffusion_models);
   } catch (e) {
     if (rev !== revision) return;
     compiled = null;
-    $("validation").textContent = e.message;
+    I18n.text($("validation"), e.message);
     $("validation").className = "error";
-    $("run-summary").textContent = "当前草稿尚未通过校验";
+    I18n.text($("run-summary"), I18n.msg("ui.draft_has_not_passed_validation"));
     $("warnings").replaceChildren();
     $("validate-again").hidden = false;
     if (!e.status || e.status >= 500) {
@@ -229,13 +226,13 @@ function renderRefs() {
     const row = document.createElement("div");
     row.className = "ref";
     const img = document.createElement("img");
-    img.src = "/reference/" + encodeURIComponent(r.name);
-    img.alt = "参考图" + (i + 1);
+    img.src = I18n.plus("/reference/", encodeURIComponent(r.name));
+    I18n.text(img, I18n.plus(I18n.msg("ui.reference_image"), I18n.plus(i, 1)), "alt");
     img.onerror = () => {
-      text.textContent = `图${i + 1}缺失：请移除后重新上传`;
+      I18n.text(text, I18n.msg("ui.image_p0_is_missing_remove_it_and_upload_again", {p0: I18n.plus(i, 1)}));
     };
     const text = document.createElement("span");
-    text.textContent = `图${i + 1} · ${r.display || r.name.slice(0, 18)}`;
+    I18n.text(text, I18n.msg("ui.image_p0_p1_625ff", {p0: I18n.plus(i, 1), p1: r.display || r.name.slice(0, 18)}));
     row.append(img, text);
     act(
       "↑",
@@ -247,7 +244,7 @@ function renderRefs() {
       row,
     ).disabled = i === 0;
     act(
-      "移除",
+      I18n.msg("ui.remove"),
       () => {
         refs.splice(i, 1);
         renderRefs();
@@ -265,7 +262,7 @@ function apply(p, referenceData = []) {
     ? referenceData
     : (v.images || []).map((name) => ({ name }));
   $("upload").value = "";
-  const size = `${v.width},${v.height}`;
+  const size = I18n.join(["", v.width, ",", v.height, ""]);
   $("size").value = [...$("size").options].some((o) => o.value === size)
     ? size
     : "custom";
@@ -290,11 +287,11 @@ function view(which) {
 }
 function parameterText(job) {
   const p = { ...base, ...job.payload };
-  return `${p.steps}步 · CFG ${p.cfg} · ${p.sampler}/${p.scheduler} · 种子 ${p.seed}\n${(job.actual_size || job.result?.actual_size || [p.width, p.height]).join(" × ")} · 缓存 ${job.workflow?.["2"]?.inputs.dtype || p.cache_dtype}\n${p.prompt}`;
+  return I18n.msg("ui.p0_steps_cfg_p1_p2_p3_seed_p4_p5_cache_p6_p7", {p0: p.steps, p1: p.cfg, p2: p.sampler, p3: p.scheduler, p4: p.seed, p5: I18n.parts(job.actual_size || job.result?.actual_size || [p.width, p.height], " × "), p6: job.workflow?.["2"]?.inputs.dtype || p.cache_dtype, p7: p.prompt});
 }
 async function selectJob(id, loadParameters = false) {
   const epoch = ++selectionEpoch;
-  const job = await api("/api/jobs/" + encodeURIComponent(id));
+  const job = await api(I18n.plus("/api/jobs/", encodeURIComponent(id)));
   if (epoch !== selectionEpoch) return;
   if (job.status === "done") showResult(job);
   else {
@@ -310,22 +307,21 @@ function showResult(job) {
   persist("proSelected", job.id);
   view("result");
   const img = document.createElement("img");
-  img.src = "/output/" + encodeURIComponent(job.result.files[0]);
-  img.alt = "所选作品";
+  img.src = I18n.plus("/output/", encodeURIComponent(job.result.files[0]));
+  I18n.text(img, I18n.msg("ui.selected_result"), "alt");
   $("canvas").replaceChildren(img);
   $("result-detail").hidden = false;
-  $("result-detail").textContent =
-    "所选作品实际参数（右侧为独立草稿）\n" + parameterText(job);
+  I18n.text($("result-detail"), I18n.plus(I18n.msg("ui.actual_result_parameters_the_right_panel_is_an_independent_draft"), parameterText(job)));
   const a = $("result-actions");
   a.replaceChildren();
   const link = document.createElement("a");
-  link.textContent = "下载 PNG";
+  I18n.text(link, I18n.msg("ui.download_png"));
   link.href = img.src;
   link.download = job.result.files[0];
   a.append(link);
-  act("载入参数", () => apply(job.payload), a);
+  act(I18n.msg("ui.load_parameters"), () => apply(job.payload), a);
   act(
-    "固定此种子",
+    I18n.msg("ui.use_this_seed"),
     () => {
       $("seed").value = job.payload.seed;
       change();
@@ -333,20 +329,20 @@ function showResult(job) {
     a,
   );
   act(
-    "作为参考图",
+    I18n.msg("ui.use_as_reference"),
     async () => {
       const blob = await (await fetch(img.src)).blob();
       const r = await upload(blob, "result.png");
       apply({ ...payload(), mode: "edit", images: [r.name] }, [r]);
-      message("已载入为图1，请描述要保留和改变的内容。");
+      message(I18n.msg("ui.loaded_as_image_1_describe_what_to_preserve_and_what_to_change"));
     },
     a,
   );
-  act("设为 A", () => setComparison(0, job), a);
-  act("设为 B", () => setComparison(1, job), a);
+  act(I18n.msg("ui.set_as_a"), () => setComparison(0, job), a);
+  act(I18n.msg("ui.set_as_b"), () => setComparison(1, job), a);
   act(
-    "导出任务参数",
-    () => downloadJSON(job, "qwen-task-" + job.id + ".json"),
+    I18n.msg("ui.export_task_parameters"),
+    () => downloadJSON(job, I18n.plus(I18n.plus("qwen-task-", job.id), ".json")),
     a,
   );
 }
@@ -365,12 +361,12 @@ function renderComparison() {
   comparison.forEach((job, i) => {
     const figure = document.createElement("figure");
     const caption = document.createElement("figcaption");
-    caption.textContent = `${i ? "B" : "A"} / ${job ? job.payload.steps + "步 · 种子 " + job.payload.seed : "从作品中选择"}`;
+    I18n.text(caption, I18n.join(["", i ? "B" : "A", " / ", job ? I18n.plus(I18n.plus(job.payload.steps, I18n.msg("ui.steps_seed")), job.payload.seed) : I18n.msg("ui.select_a_result"), ""]));
     figure.append(caption);
     if (job) {
       const img = document.createElement("img");
-      img.src = "/output/" + encodeURIComponent(job.result.files[0]);
-      img.alt = i ? "作品B" : "作品A";
+      img.src = I18n.plus("/output/", encodeURIComponent(job.result.files[0]));
+      I18n.text(img, i ? I18n.msg("ui.result_b") : I18n.msg("ui.result_a"), "alt");
       const viewport = document.createElement("div");
       viewport.className = "compare-viewport";
       viewport.append(img);
@@ -392,11 +388,11 @@ function renderComparison() {
         });
       };
       img.onload = zoomComparison;
-      act("载入参数", () => apply(job.payload), figure, "quiet");
+      act(I18n.msg("ui.load_parameters"), () => apply(job.payload), figure, "quiet");
     }
     box.append(figure);
   });
-  $("compare-count").textContent = comparison.filter(Boolean).length + "/2";
+  I18n.text($("compare-count"), I18n.plus(comparison.filter(Boolean).length, "/2"));
   const table = $("compare-table");
   table.replaceChildren();
   const effective = (j, key) => {
@@ -414,77 +410,74 @@ function renderComparison() {
         cfg: node("7", "cfg"),
         tile_size: node("8", "tile_size"),
       }[key] ?? j.payload[key];
-    return value === "" ? "空" : String(value ?? "未记录");
+    return value === "" ? I18n.msg("ui.empty") : (value == null ? I18n.msg("ui.not_recorded") : String(value));
   };
   const values = [
     [
-      "输出尺寸",
+      I18n.msg("ui.output_size"),
       ...comparison.map((j) =>
         j
-          ? (
-              j.actual_size ||
-              j.result?.actual_size || [j.payload.width, j.payload.height]
-            ).join(" × ")
+          ? I18n.parts(j.actual_size ||
+              j.result?.actual_size || [j.payload.width, j.payload.height], " × ")
           : "—",
       ),
     ],
     ...Object.entries({
-      mode: "创作模式",
-      prompt: "提示词",
-      negative_prompt: "负面提示词",
-      steps: "步数",
-      seed: "种子",
+      mode: I18n.msg("ui.creation_mode"),
+      prompt: I18n.msg("ui.prompt"),
+      negative_prompt: I18n.msg("ui.negative_prompt"),
+      steps: I18n.msg("server.steps"),
+      seed: I18n.msg("server.seed"),
       cfg: "CFG",
-      sampler: "采样器",
-      scheduler: "调度器",
-      cache_dtype: "缓存精度（实际）",
-      cache_device: "缓存位置（实际）",
-      tile_size: "VAE分块",
-      resolution: "参考大小",
+      sampler: I18n.msg("ui.sampler"),
+      scheduler: I18n.msg("ui.scheduler"),
+      cache_dtype: I18n.msg("ui.cache_precision_effective"),
+      cache_device: I18n.msg("ui.cache_location_effective"),
+      tile_size: I18n.msg("ui.vae_tile_size"),
+      resolution: I18n.msg("server.reference_size"),
     }).map(([k, label]) => [label, ...comparison.map((j) => effective(j, k))]),
     [
-      "参考图片（按顺序）",
+      I18n.msg("ui.references_in_order"),
       ...comparison.map((j) =>
         j
-          ? (j.payload.images || [])
-              .map((name, i) => `${i + 1}. ${name}`)
-              .join("\n") || "无"
+          ? I18n.parts((j.payload.images || [])
+              .map((name, i) => I18n.join(["", I18n.plus(i, 1), ". ", name, ""])), "\n") || I18n.msg("ui.none")
           : "—",
       ),
     ],
     ...[
-      ["生成模型", "1", "unet_name"],
-      ["文本编码器", "3", "clip_name"],
+      [I18n.msg("ui.diffusion_model"), "1", "unet_name"],
+      [I18n.msg("ui.text_encoder"), "3", "clip_name"],
       ["VAE", "4", "vae_name"],
     ].map(([label, id, key]) => [
       label,
       ...comparison.map((j) =>
-        j ? (j.workflow?.[id]?.inputs?.[key] ?? "未记录") : "—",
+        j ? (j.workflow?.[id]?.inputs?.[key] ?? I18n.msg("ui.not_recorded")) : "—",
       ),
     ]),
     [
-      "后端执行时间",
+      I18n.msg("ui.backend_execution_time"),
       ...comparison.map((j) => {
         const t = j?.result?.timings;
         return t?.backend_execution_seconds != null
-          ? `${t.backend_execution_seconds}秒${t.sampler_cached ? "（缓存命中）" : ""}`
-          : "未记录";
+          ? I18n.msg("ui.p0_s_p1", {p0: t.backend_execution_seconds, p1: t.sampler_cached ? I18n.msg("ui.cache_hit") : ""})
+          : I18n.msg("ui.not_recorded");
       }),
     ],
     [
-      "任务总耗时",
+      I18n.msg("ui.total_task_time"),
       ...comparison.map((j) =>
-        j?.result?.seconds != null ? `${j.result.seconds}秒` : "未记录",
+        j?.result?.seconds != null ? I18n.msg("ui.p0_s", {p0: j.result.seconds}) : I18n.msg("ui.not_recorded"),
       ),
     ],
   ];
   values.forEach((row) => {
     const tr = document.createElement("tr");
-    if (comparison.every(Boolean) && row[1] !== row[2])
+    if (comparison.every(Boolean) && String(row[1]) !== String(row[2]))
       tr.className = "different";
     row.forEach((value) => {
       const td = document.createElement("td");
-      td.textContent = value;
+      I18n.text(td, value);
       tr.append(td);
     });
     table.append(tr);
@@ -497,18 +490,18 @@ async function gallery(append = false) {
   }
   galleryLoading = true;
   try {
-    const data = await api("/api/gallery?offset=" + (append ? nextPage : 0));
+    const data = await api(I18n.plus("/api/gallery?offset=", append ? nextPage : 0));
     galleryItems = append ? [...galleryItems, ...data.items] : data.items;
     const box = $("gallery");
     if (!append) box.replaceChildren();
     for (const item of data.items) {
       const b = document.createElement("button");
       const img = document.createElement("img");
-      img.src = "/thumb/" + encodeURIComponent(item.name);
-      img.alt = item.prompt;
+      img.src = I18n.plus("/thumb/", encodeURIComponent(item.name));
+      I18n.text(img, item.prompt, "alt");
       img.loading = "lazy";
       const caption = document.createElement("small");
-      caption.textContent = item.prompt;
+      I18n.text(caption, item.prompt);
       b.append(img, caption);
       b.onclick = () =>
         selectJob(item.job_id).catch((e) => message(e.message, true));
@@ -538,13 +531,13 @@ async function jobs() {
       const row = document.createElement("div");
       row.className = "job";
       const label = document.createElement("span");
-      label.textContent = job.payload.prompt;
+      I18n.text(label, job.payload.prompt);
       const meta = document.createElement("small");
-      meta.textContent = `${names[job.status] || job.status} · ${job.payload.steps}步${job.batch ? " · " + job.batch.index + "/" + job.batch.total + " · " + job.batch.label : ""}`;
+      I18n.text(meta, I18n.msg("ui.p0_p1_steps_p2", {p0: names[job.status] || job.status, p1: job.payload.steps, p2: job.batch ? I18n.plus(I18n.plus(I18n.plus(I18n.plus(I18n.plus(" · ", job.batch.index), "/"), job.batch.total), " · "), I18n.server(job.batch.label)) : ""}));
       label.append(meta);
       row.append(label);
       act(
-        "查看",
+        I18n.msg("ui.view"),
         async () => {
           await selectJob(job.id);
         },
@@ -552,29 +545,29 @@ async function jobs() {
       );
       if (["failed", "cancelled"].includes(job.status))
         act(
-          "载入重试参数",
+          I18n.msg("ui.load_retry_parameters"),
           () => {
             apply(job.payload);
             $("run-kind").value = "single";
             batchControls();
-            message("已载入原参数和种子。点击运行工作流会创建一次新的生成。");
+            message(I18n.msg("ui.original_parameters_and_seed_loaded_run_workflow_will_create_a_ne"));
           },
           row,
         );
       if (!["done", "failed", "cancelled"].includes(job.status))
         act(
-          "取消",
+          I18n.msg("ui.cancel"),
           async () => {
-            await api("/api/jobs/" + job.id + "/cancel", {});
+            await api(I18n.plus(I18n.plus("/api/jobs/", job.id), "/cancel"), {});
             await jobs();
           },
           row,
         );
       if (["timed_out", "lost", "submission_unknown"].includes(job.status))
         act(
-          "继续核对",
+          I18n.msg("ui.continue_checking"),
           async () => {
-            await api("/api/jobs/" + job.id + "/resume", {});
+            await api(I18n.plus(I18n.plus("/api/jobs/", job.id), "/resume"), {});
             active = job.id;
             persist("proActive", active);
             await poll();
@@ -593,11 +586,11 @@ async function poll() {
   const id = active,
     epoch = selectionEpoch;
   try {
-    const job = await api("/api/jobs/" + id);
+    const job = await api(I18n.plus("/api/jobs/", id));
     if (active !== id) return;
     const p = job.progress || {};
     message(
-      `${names[job.status] || job.status} · ${p.stage || ""}${p.max ? " " + p.value + "/" + p.max : ""}${job.queue_position ? " · 队列位置 " + job.queue_position : ""}\n本次：${job.payload.steps}步 / CFG ${job.payload.cfg || 1} / 种子 ${job.payload.seed}${job.error ? "\n" + job.error : ""}`,
+      I18n.msg("ui.p0_p1_p2_p3_this_task_p4_steps_cfg_p5_seed_p6_p7", {p0: names[job.status] || job.status, p1: I18n.server(p.stage) || "", p2: p.max ? I18n.plus(I18n.plus(I18n.plus(" ", p.value), "/"), p.max) : "", p3: job.queue_position ? I18n.plus(I18n.msg("ui.queue_position"), job.queue_position) : "", p4: job.payload.steps, p5: job.payload.cfg || 1, p6: job.payload.seed, p7: I18n.server(job.error) ? I18n.plus("\n", I18n.server(job.error)) : ""}),
     );
     $("progress").hidden = !p.max || terminal.has(job.status);
     if (p.max) {
@@ -615,8 +608,8 @@ async function poll() {
       await jobs();
     } else
       act(
-        "取消此任务",
-        () => api("/api/jobs/" + id + "/cancel", {}),
+        I18n.msg("ui.cancel_this_task"),
+        () => api(I18n.plus(I18n.plus("/api/jobs/", id), "/cancel"), {}),
         $("active-actions"),
       );
   } catch (e) {
@@ -624,8 +617,8 @@ async function poll() {
     if (e.status === 404) {
       active = null;
       localStorage.removeItem("proActive");
-      message("原任务记录不存在；请从任务队列选择其他任务。", true);
-    } else message("连接暂时中断，将继续核对原任务。\n" + e.message, true);
+      message(I18n.msg("ui.original_task_not_found_select_another_task_from_the_queue"), true);
+    } else message(I18n.plus(I18n.msg("ui.connection_interrupted_continuing_to_check_the_original_task"), e.message), true);
   } finally {
     polling = false;
   }
@@ -670,17 +663,16 @@ async function run(retry = false) {
     persist("proActive", active);
     message(
       result.job_ids
-        ? `已提交整组 ${result.job_ids.length} 张，后台依次生成。`
-        : "已加入队列；右侧草稿可继续编辑。",
+        ? I18n.msg("ui.submitted_p0_images_the_backend_will_generate_them_sequentially", {p0: result.job_ids.length})
+        : I18n.msg("ui.queued_you_can_keep_editing_the_draft"),
     );
     await jobs();
     await poll();
   } catch (e) {
     if (e.status && e.status < 500) localStorage.removeItem("proPending");
     message(
-      e.message +
-        (saved("proPending")
-          ? "\n请重试同一次提交，将保留原参数和请求ID。"
+      I18n.plus(e.message, saved("proPending")
+          ? I18n.msg("ui.retry_the_same_submission_to_preserve_its_parameters_and_request")
           : ""),
       true,
     );
@@ -698,14 +690,14 @@ async function upload(blob, name) {
     signal: AbortSignal.timeout(30000),
   });
   const r = await response.json();
-  if (!response.ok) throw new Error(r.error || "上传失败");
+  if (!response.ok) throw I18n.error(r.error || I18n.msg("ui.upload_failed"));
   return r;
 }
 async function refreshPresets() {
   presets = (await api("/api/pro/presets")).items;
-  $("preset-count").textContent = presets.length;
+  I18n.text($("preset-count"), presets.length);
   $("presets").replaceChildren();
-  if (!presets.length) $("presets").textContent = "保存你的第一个创作配方";
+  if (!presets.length) I18n.text($("presets"), I18n.msg("ui.save_your_first_recipe"));
   for (const item of presets) {
     const row = document.createElement("div");
     act(
@@ -719,12 +711,12 @@ async function refreshPresets() {
     );
     if (item.history?.length) {
       const select = document.createElement("select");
-      select.setAttribute("aria-label", item.name + "的历史版本");
-      select.append(new Option(`历史版本 · 当前 v${item.revision}`, ""));
+      I18n.attr(select, I18n.plus(item.name, I18n.msg("ui.revision_history")), "aria-label");
+      select.append(I18n.option(I18n.msg("ui.history_current_v_p0", {p0: item.revision}), ""));
       [...item.history]
         .reverse()
         .forEach((h) =>
-          select.append(new Option(`载入 v${h.revision}`, String(h.revision))),
+          select.append(I18n.option(I18n.msg("ui.load_v_p0", {p0: h.revision}), String(h.revision))),
         );
       select.onchange = () => {
         const h = item.history.find((h) => String(h.revision) === select.value);
@@ -732,7 +724,7 @@ async function refreshPresets() {
           apply(h.parameters);
           $("preset-name").value = item.name;
           message(
-            `已载入 ${item.name} v${h.revision} 到草稿。保存后成为新版本。`,
+            I18n.msg("ui.loaded_p0_v_p1_into_the_draft_save_to_create_a_new_revision", {p0: item.name, p1: h.revision}),
           );
         }
       };
@@ -767,13 +759,13 @@ $("upload").onchange = async () => {
   controls();
   try {
     const files = [...$("upload").files];
-    if (files.length + refs.length > 3)
-      throw new Error("最多3张参考图，请先移除不需要的图片");
+    if (I18n.plus(files.length, refs.length) > 3)
+      throw I18n.error(I18n.msg("ui.up_to_3_references_remove_unused_images_first"));
     for (const file of files) {
-      if (file.size > 20 * 1024 ** 2) throw new Error("单张图片不能超过20MB");
+      if (file.size > 20 * 1024 ** 2) throw I18n.error(I18n.msg("ui.each_image_must_be_at_most_20mb"));
       refs.push({ ...(await upload(file, file.name)), display: file.name });
     }
-    message("参考图上传完成");
+    message(I18n.msg("ui.references_uploaded"));
   } catch (e) {
     message(e.message, true);
   } finally {
@@ -790,7 +782,7 @@ $("save-preset").onclick = async () => {
       parameters: payload(),
     });
     await refreshPresets();
-    message("已保存预设：" + item.name);
+    message(I18n.plus(I18n.msg("ui.preset_saved"), item.name));
   } catch (e) {
     message(e.message, true);
   }
@@ -800,7 +792,7 @@ $("export").onclick = () =>
     {
       kind: "qwen-studio-workflow",
       version: 1,
-      name: $("preset-name").value || "我的配方",
+      name: $("preset-name").value || I18n.msg("ui.my_recipe"),
       parameters: payload(),
     },
     "qwen-workflow.json",
@@ -810,23 +802,21 @@ $("import-file").onchange = async () => {
   try {
     const file = $("import-file").files[0];
     if (!file) return;
-    if (file.size > 1024 * 1024) throw new Error("配方文件不能超过1MB");
+    if (file.size > 1024 * 1024) throw I18n.error(I18n.msg("ui.recipe_files_must_be_at_most_1mb"));
     const data = JSON.parse(await file.text());
     if (
       data.kind !== "qwen-studio-workflow" ||
       data.version !== 1 ||
       !data.parameters
     )
-      throw new Error(
-        "请选择从专业工作台导出的v1配方JSON；API节点图请在ComfyUI中使用",
-      );
+      throw I18n.error(I18n.msg("ui.select_a_v1_recipe_json_exported_by_this_workbench_open_api_node"));
     const recipe = await api("/api/pro/recipe", data.parameters);
     apply(recipe.parameters);
-    $("preset-name").value = String(data.name || "导入配方").slice(0, 80);
+    $("preset-name").value = String(data.name || I18n.msg("ui.import_recipe")).slice(0, 80);
     message(
       recipe.missing_references.length
-        ? "配方参数已载入。参考图缺失，请在输入区按原顺序重新上传；补齐前无法生成。"
-        : "配方已导入草稿；点击运行才会生成。",
+        ? I18n.msg("ui.parameters_loaded_but_references_are_missing_upload_them_in_the_o")
+        : I18n.msg("ui.recipe_imported_into_draft_run_it_when_ready"),
     );
   } catch (e) {
     message(e.message, true);
@@ -835,8 +825,8 @@ $("import-file").onchange = async () => {
   }
 };
 $("inspect").onclick = () => {
-  if (!compiled) return message("请先修正参数，完成校验。", true);
-  $("graph-json").textContent = JSON.stringify(compiled.workflow, null, 2);
+  if (!compiled) return message(I18n.msg("ui.fix_the_parameters_and_complete_validation_first"), true);
+  I18n.text($("graph-json"), JSON.stringify(compiled.workflow, null, 2));
   $("graph-dialog").showModal();
 };
 $("close-dialog").onclick = () => $("graph-dialog").close();
@@ -883,18 +873,18 @@ $("flow")
     for (const [key, values] of Object.entries(config.pro?.options || {})) {
       const select = $(key);
       const labels = new Map(
-        [...select.options].map((o) => [o.value, o.textContent]),
+        [...select.options].map((o) => [o.value, o.dataset.i18n ? I18n.msg(o.dataset.i18n) : o.textContent]),
       );
       select.replaceChildren(
         ...values.map(
-          (v) => new Option(labels.get(String(v)) || String(v), String(v)),
+          (v) => I18n.option(labels.get(String(v)) || String(v), String(v)),
         ),
       );
     }
     if (config.generation?.reference_resolutions) {
       $("resolution").replaceChildren(
         ...config.generation.reference_resolutions.map(
-          (v) => new Option(String(v), String(v)),
+          (v) => I18n.option(String(v), String(v)),
         ),
       );
     }
@@ -903,24 +893,24 @@ $("flow")
     queueLimit = config.queue_limit || 5;
     $("batch-count").max = queueLimit;
     batchControls();
-    $("connection").textContent = config.backend_ready
-      ? "● 模型已连接"
-      : "○ 模型未连接";
+    I18n.text($("connection"), config.backend_ready
+      ? I18n.msg("ui.model_connected")
+      : I18n.msg("ui.model_disconnected"));
     const recipes = [
-      ["标准摄影", "1024 / 40步 · 质量起点", { prompt: config.examples.photo }],
+      [I18n.msg("ui.standard_photography"), I18n.msg("ui.1024_40_steps_quality_baseline"), { prompt: config.examples.photo }],
       [
-        "快速探索",
-        "768 / 20步 · 构图预览",
+        I18n.msg("ui.quick_exploration"),
+        I18n.msg("ui.768_20_steps_composition_preview"),
         { prompt: config.examples.photo, steps: 20, width: 768, height: 768 },
       ],
       [
-        "中文海报",
-        "竖幅 / 40步 · 检查文字",
+        I18n.msg("ui.chinese_poster"),
+        I18n.msg("ui.portrait_40_steps_check_typography"),
         { prompt: config.examples.poster, width: 832, height: 1216 },
       ],
       [
-        "参考图编辑",
-        "768参考 / INT8缓存",
+        I18n.msg("ui.reference_editing"),
+        I18n.msg("ui.768_reference_int8_cache"),
         { prompt: config.examples.edit, mode: "edit" },
       ],
     ];
@@ -937,9 +927,9 @@ $("flow")
         "recipe",
       );
       const title = document.createElement("strong");
-      title.textContent = label;
+      I18n.text(title, label);
       const desc = document.createElement("small");
-      desc.textContent = description;
+      I18n.text(desc, description);
       b.append(title, desc);
     }
     const draft = saved("proDraft");
@@ -953,7 +943,7 @@ $("flow")
       refreshPresets(),
     ]);
     if (restored.some((r) => r.status === "rejected"))
-      message("部分列表暂不可用，任务跟踪仍在运行。可点击刷新重试。", true);
+      message(I18n.msg("ui.some_lists_are_unavailable_task_tracking_continues_use_refresh_to"), true);
     const query = new URLSearchParams(location.search).get("job");
     const selectedId = query || saved("proSelected");
     if (selectedId)
@@ -964,7 +954,7 @@ $("flow")
     comparison = await Promise.all(
       [0, 1].map((i) =>
         ids[i]
-          ? api("/api/jobs/" + encodeURIComponent(ids[i]))
+          ? api(I18n.plus("/api/jobs/", encodeURIComponent(ids[i])))
               .then((j) => (j.status === "done" ? j : null))
               .catch(() => null)
           : null,
@@ -992,16 +982,14 @@ function batchControls() {
   $("batch-count-box").hidden = kind !== "seeds";
   $("batch-count").disabled = kind !== "seeds";
   $("experiment-options").hidden = kind !== "experiment";
-  $("batch-hint").textContent =
-    kind === "experiment"
-      ? `保持同一种子、提示词和参考图，只改变所选参数。种子为 -1 时整组共用一次随机值；支持 2–${queueLimit} 个不同值。`
-      : `每张种子依次加 1；-1 时随机起点。每批 2–${queueLimit} 张，适合挑选构图。`;
-  $("run").textContent =
-    kind === "single"
-      ? "运行工作流 ↗"
+  I18n.text($("batch-hint"), kind === "experiment"
+      ? I18n.msg("ui.keep_the_same_seed_prompt_and_references_vary_only_the_selected_p", {p0: queueLimit})
+      : I18n.msg("ui.seeds_increase_by_1_per_image_1_picks_a_random_starting_point_gen", {p0: queueLimit}));
+  I18n.text($("run"), kind === "single"
+      ? I18n.msg("ui.run_workflow")
       : kind === "seeds"
-        ? "提交整组 · 依次生成 ↗"
-        : "提交单变量实验 ↗";
+        ? I18n.msg("ui.submit_batch_sequential")
+        : I18n.msg("ui.submit_parameter_experiment"));
   persist("proBatchDraft", {
     kind,
     count: $("batch-count").value,
@@ -1031,15 +1019,15 @@ async function refreshBatches() {
     card.dataset.batchId = batch.id;
     card.open = openStates.get(batch.id) ?? ended < batch.jobs.length;
     const title = document.createElement("summary");
-    title.textContent = `${batch.kind === "experiment" ? "对比实验" : "连续出图"} · 完成 ${done}/${batch.jobs.length} · ${uncertain ? "需核对" : ended === batch.jobs.length ? "已结束" : "进行中"} · ${new Date(batch.created * 1000).toLocaleTimeString()}`;
+    I18n.text(title, I18n.msg("ui.p0_done_p1_p2_p3_p4", {p0: batch.kind === "experiment" ? I18n.msg("ui.parameter_experiment") : I18n.msg("ui.seed_sequence"), p1: done, p2: batch.jobs.length, p3: uncertain ? I18n.msg("ui.needs_review") : ended === batch.jobs.length ? I18n.msg("ui.finished") : I18n.msg("ui.in_progress"), p4: new Date(batch.created * 1000).toLocaleTimeString()}));
     card.append(title);
     for (const job of batch.jobs) {
       const row = document.createElement("div");
       row.className = "batch-member";
       const label = document.createElement("span");
-      label.textContent = `${job.batch.index}. ${job.batch.label} · ${names[job.status]}${job.error ? " · " + job.error : ""}`;
+      I18n.text(label, I18n.join(["", job.batch.index, ". ", I18n.server(job.batch.label), " · ", names[job.status], "", I18n.server(job.error) ? I18n.plus(" · ", I18n.server(job.error)) : "", ""]));
       row.append(label);
-      act("查看", () => selectJob(job.id), row, "quiet");
+      act(I18n.msg("ui.view"), () => selectJob(job.id), row, "quiet");
       if (job.status === "done") {
         for (const [slot, name] of [
           [0, "A"],
@@ -1047,7 +1035,7 @@ async function refreshBatches() {
         ])
           act(
             name,
-            async () => setComparison(slot, await api("/api/jobs/" + job.id)),
+            async () => setComparison(slot, await api(I18n.plus("/api/jobs/", job.id))),
             row,
             "quiet",
           );
@@ -1056,9 +1044,9 @@ async function refreshBatches() {
     }
     if (ended < batch.jobs.length)
       act(
-        "取消本批未完成任务",
+        I18n.msg("ui.cancel_unfinished_tasks_in_batch"),
         async () => {
-          await api(`/api/pro/batches/${batch.id}/cancel`, {});
+          await api(I18n.join(["/api/pro/batches/", batch.id, "/cancel"]), {});
           await refreshBatches();
           await jobs();
         },
@@ -1066,16 +1054,16 @@ async function refreshBatches() {
         "quiet",
       );
     act(
-      "导出整组记录",
+      I18n.msg("ui.export_batch_records"),
       async () =>
         downloadJSON(
           {
             ...batch,
             jobs: await Promise.all(
-              batch.job_ids.map((id) => api("/api/jobs/" + id)),
+              batch.job_ids.map((id) => api(I18n.plus("/api/jobs/", id))),
             ),
           },
-          `qwen-batch-${batch.id}.json`,
+          I18n.join(["qwen-batch-", batch.id, ".json"]),
         ),
       card,
       "quiet",
@@ -1096,11 +1084,11 @@ async function health() {
   healthLoading = true;
   try {
     const config = await api("/api/config");
-    $("connection").textContent = config.backend_ready
-      ? "● 模型已连接"
-      : "○ 模型未连接";
+    I18n.text($("connection"), config.backend_ready
+      ? I18n.msg("ui.model_connected")
+      : I18n.msg("ui.model_disconnected"));
   } catch {
-    $("connection").textContent = "○ 连接中断";
+    I18n.text($("connection"), I18n.msg("ui.connection_interrupted"));
   } finally {
     healthLoading = false;
   }
@@ -1109,7 +1097,7 @@ function zoomComparison() {
   const zoom = $("compare-zoom").value;
   document.querySelectorAll(".compare-viewport img").forEach((img) => {
     img.style.width =
-      zoom === "fit" ? "100%" : `${img.naturalWidth * Number(zoom)}px`;
+      zoom === "fit" ? "100%" : I18n.join(["", img.naturalWidth * Number(zoom), "px"]);
     img.style.height = zoom === "fit" ? "280px" : "auto";
     img.style.maxWidth = "none";
   });
@@ -1151,8 +1139,8 @@ document.addEventListener("visibilitychange", () => {
 
 function scrollBatch() {
   const form = $("parameters"), section = $("batch-section");
-  if (form.scrollHeight > form.clientHeight + 1) {
-    form.scrollTo({top:form.scrollTop + section.getBoundingClientRect().top - form.getBoundingClientRect().top,behavior:"smooth"});
+  if (form.scrollHeight > I18n.plus(form.clientHeight, 1)) {
+    form.scrollTo({top:I18n.plus(form.scrollTop, section.getBoundingClientRect().top) - form.getBoundingClientRect().top,behavior:"smooth"});
   } else section.scrollIntoView({behavior:"smooth",block:"start"});
 }
 $("run-kind").addEventListener("change",scrollBatch);

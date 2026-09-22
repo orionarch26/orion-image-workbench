@@ -12,7 +12,7 @@ def main():
     jobs={};requests=[];drop_first=[True];errors=[]
     with sync_playwright() as p:
         browser=p.chromium.launch(headless=True,args=['--disable-gpu'])
-        page=browser.new_page()
+        page=browser.new_page(locale="zh-CN")
         page.on('pageerror',lambda e:errors.append(str(e)))
         def handle(route):
             req=route.request;path=req.url.split('http://127.0.0.1:7898',1)[-1]
@@ -54,7 +54,7 @@ def main():
         assert '独立草稿' in page.locator('#snapshot').inner_text()
         page.reload();page.wait_for_function("document.querySelector('#prompt').value === 'B: blue bird'")
         assert page.locator('#mode').input_value()=='transparent'
-        assert page.locator('#size').input_value()=='832,1216'
+        assert page.locator('#size').input_value()=='832,1216', (page.locator('#size').input_value(), page.locator('#size').inner_html(), page.evaluate("localStorage.getItem('studioDraft')"), errors)
         assert not errors,errors
         (ROOT/'docs/optimization-browser-state.json').write_text(json.dumps({'checks':['lost acknowledgement retries same key','one job per request key','selected result parameters explicit','draft preserved during standard generation','draft survives reload'],'page_errors':errors},indent=2))
         browser.close();print('Browser state tests PASS')

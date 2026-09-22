@@ -3,69 +3,56 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <title>专业工作台 · Qwen Image</title>
+        <title data-i18n="ui.workbench_qwen_image">专业工作台 · Qwen Image</title>
         <link rel="stylesheet" href="/static/pro.css" />
-        <script src="/static/pro.js" defer></script>
+        <script src="/static/locales.js" defer></script>
+<script src="/static/i18n.js" defer></script>
+<script src="/static/pro.js" defer></script>
     </head>
     <body>
         <header class="studio-header">
             <a class="studio-brand" href="/" aria-label="猎户画室首页"
-                ><span class="studio-brand-icon" aria-hidden="true"
+                 data-i18n-aria-label="ui.orion_image_workbench_home"><span class="studio-brand-icon" aria-hidden="true"
                     ><svg viewBox="0 0 24 24">
                         <path d="m12 3 9 5-9 5-9-5Z" />
-                        <path d="m3 12 9 5 9-5M3 16l9 5 9-5" /></svg></span
-                ><span class="studio-brand-copy"
-                    ><strong>猎户画室</strong
-                    ><small>Qwen Image 2.1</small></span
-                ></a
-            >
-            <nav class="studio-navigation" aria-label="主导航">
+                        <path d="m3 12 9 5 9-5M3 16l9 5 9-5" /></svg></span><span class="studio-brand-copy"
+                    ><strong><span data-i18n="ui.orion_image_workbench">猎户画室</span></strong><small>Qwen Image 2.1</small></span></a>
+            <nav class="studio-navigation" aria-label="主导航" data-i18n-aria-label="ui.main_navigation">
                 <a class="studio-nav-link" href="/"
                     ><svg viewBox="0 0 24 24" aria-hidden="true">
                         <rect x="3" y="3" width="18" height="18" rx="4" />
                         <path d="m3 15 5-5 5 5 3-3 5 5" />
-                        <circle cx="16" cy="8" r="1" /></svg
-                    ><span>创作画室</span></a
-                ><a class="studio-nav-link" href="/pro" aria-current="page"
+                        <circle cx="16" cy="8" r="1" /></svg><span><span data-i18n="ui.create">创作画室</span></span></a><a class="studio-nav-link" href="/pro" aria-current="page"
                     ><svg viewBox="0 0 24 24" aria-hidden="true">
                         <rect x="3" y="4" width="6" height="6" rx="1.5" />
                         <rect x="15" y="14" width="6" height="6" rx="1.5" />
-                        <path d="M9 7h6a3 3 0 0 1 3 3v4M6 10v7h9" /></svg
-                    ><span>专业工作台</span></a
-                ><a class="studio-nav-link" href="/help"
+                        <path d="M9 7h6a3 3 0 0 1 3 3v4M6 10v7h9" /></svg><span><span data-i18n="ui.workbench">专业工作台</span></span></a><a class="studio-nav-link" href="/help"
                     ><svg viewBox="0 0 24 24" aria-hidden="true">
                         <path
                             d="M12 5v15M3 4h5a4 4 0 0 1 4 2 4 4 0 0 1 4-2h5v15h-5a5 5 0 0 0-4 1 5 5 0 0 0-4-1H3Z"
-                        /></svg
-                    ><span>使用指南</span></a
-                >
+                        /></svg><span><span data-i18n="ui.guide">使用指南</span></span></a>
             </nav>
-            <div class="studio-service">
-                <span class="studio-local">LOCAL WORKSPACE</span
-                ><span id="connection" class="studio-health" role="status"
-                    >检查服务…</span
-                >
+            <select data-locale-select class="locale-select" aria-label="语言 / Language" data-i18n-aria-label="locale.label"><option value="zh-CN">简体中文</option><option value="en">English</option></select><div class="studio-service">
+                <span class="studio-local">LOCAL WORKSPACE</span><span id="connection" class="studio-health" role="status"
+                    ><span data-i18n="ui.checking_service">检查服务…</span></span>
             </div>
         </header>
         <div class="workspace">
             <aside class="library">
                 <div class="eyebrow">WORKFLOW LIBRARY</div>
-                <h1>工作流库</h1>
-                <p class="muted">选择起点，建立自己的创作配方。</p>
+                <h1><span data-i18n="ui.workflow_library">工作流库</span></h1>
+                <p class="muted"><span data-i18n="ui.choose_a_starting_point_and_build_your_own_recipes">选择起点，建立自己的创作配方。</span></p>
                 <div id="builtins"></div>
-                <div class="section-label">
-                    我的预设 <span id="preset-count">0</span>
+                <div class="section-label"><span data-i18n="ui.my_presets">我的预设</span><span id="preset-count">0</span>
                 </div>
                 <div id="presets" class="preset-list"></div>
-                <label for="preset-name">预设名称</label
-                ><input
+                <label for="preset-name"><span data-i18n="ui.preset_name">预设名称</span></label><input
                     id="preset-name"
                     maxlength="80"
-                    placeholder="例如：柔光产品摄影"
-                /><button id="save-preset">保存 / 覆盖同名预设</button>
+                    placeholder="例如：柔光产品摄影" data-i18n-placeholder="ui.for_example_soft_light_product_photography"
+                /><button id="save-preset"><span data-i18n="ui.save_replace_same_name_preset">保存 / 覆盖同名预设</span></button>
                 <div class="pair">
-                    <button id="export" class="quiet">导出配方</button
-                    ><button id="import" class="quiet">导入配方</button>
+                    <button id="export" class="quiet"><span data-i18n="ui.export_recipe">导出配方</span></button><button id="import" class="quiet"><span data-i18n="ui.import_recipe">导入配方</span></button>
                 </div>
                 <input
                     id="import-file"
@@ -74,8 +61,7 @@
                     hidden
                 />
                 <div class="library-note">
-                    <span class="dot"></span> 本机推理 · 独立草稿
-                    <p>与快速创作共用模型、作品和任务队列。</p>
+                    <span class="dot"></span><span data-i18n="ui.local_inference_independent_draft">本机推理 · 独立草稿</span><p><span data-i18n="ui.models_results_and_the_task_queue_are_shared_with_the_creation_st">与快速创作共用模型、作品和任务队列。</span></p>
                     <p id="model-name"></p>
                 </div>
             </aside>
@@ -83,37 +69,25 @@
                 <div class="titlebar">
                     <div>
                         <div class="eyebrow">QWEN IMAGE 2.1 / WORKBENCH</div>
-                        <h2>让每一次调整都有依据。</h2>
+                        <h2><span data-i18n="ui.make_every_adjustment_count">让每一次调整都有依据。</span></h2>
                     </div>
-                    <span class="pill">本地工作流</span>
+                    <span class="pill"><span data-i18n="ui.local_workflow">本地工作流</span></span>
                 </div>
                 <section class="flow-panel">
                     <div class="section-heading">
-                        <h3>生成流程</h3>
-                        <button id="inspect" class="text-button">
-                            查看 API 工作流 ↗
-                        </button>
+                        <h3><span data-i18n="ui.generation_workflow">生成流程</span></h3>
+                        <button id="inspect" class="text-button"><span data-i18n="ui.inspect_api_workflow">查看 API 工作流 ↗</span></button>
                     </div>
                     <div class="flow" id="flow">
                         <button data-section="input-section">
-                            <em>01</em><strong>输入与参考</strong
-                            ><small id="flow-input">文字生成</small></button
-                        ><span>→</span
-                        ><button data-section="sampling-section">
-                            <em>02</em><strong>条件与采样</strong
-                            ><small id="flow-sample"
-                                >Euler · 40 步</small
-                            ></button
-                        ><span>→</span
-                        ><button data-section="output-section">
-                            <em>03</em><strong>解码与输出</strong
-                            ><small id="flow-output">1024 × 1024</small>
+                            <em>01</em><strong><span data-i18n="ui.input_and_references">输入与参考</span></strong><small id="flow-input"><span data-i18n="ui.text_generation">文字生成</span></small></button><span>→</span><button data-section="sampling-section">
+                            <em>02</em><strong><span data-i18n="ui.conditioning_and_sampling">条件与采样</span></strong><small id="flow-sample"
+                                ><span data-i18n="ui.euler_40_steps">Euler · 40 步</span></small></button><span>→</span><button data-section="output-section">
+                            <em>03</em><strong><span data-i18n="ui.decode_and_output">解码与输出</span></strong><small id="flow-output">1024 × 1024</small>
                         </button>
                     </div>
-                    <p id="validation" class="muted">参数校验中…</p>
-                    <button id="validate-again" class="quiet" hidden>
-                        重新校验
-                    </button>
+                    <p id="validation" class="muted"><span data-i18n="ui.validating_parameters">参数校验中…</span></p>
+                    <button id="validate-again" class="quiet" hidden><span data-i18n="ui.validate_again">重新校验</span></button>
                     <div
                         id="warnings"
                         class="warnings"
@@ -121,39 +95,28 @@
                     ></div>
                 </section>
                 <div class="viewer-tabs">
-                    <button id="view-result" aria-pressed="true">
-                        作品预览</button
-                    ><button id="view-compare" aria-pressed="false">
-                        A / B 对比 <span id="compare-count">0/2</span>
+                    <button id="view-result" aria-pressed="true"><span data-i18n="ui.result_preview">作品预览</span></button><button id="view-compare" aria-pressed="false"><span data-i18n="ui.a_b_comparison">A / B 对比</span><span id="compare-count">0/2</span>
                     </button>
                 </div>
                 <section id="result-view" class="viewer">
                     <div id="canvas" class="canvas">
                         <div class="empty">
                             <div class="empty-symbol">✳</div>
-                            <h3>从一个好的起点开始</h3>
-                            <p>
-                                左侧选择配方，右侧精调参数。<br />生成后在这里检查细节、固定种子，继续优化。
-                            </p>
+                            <h3><span data-i18n="ui.start_with_a_useful_baseline">从一个好的起点开始</span></h3>
+                            <p><span data-i18n="ui.choose_a_recipe_on_the_left_and_adjust_parameters_on_the_right">左侧选择配方，右侧精调参数。</span><br /><span data-i18n="ui.inspect_details_here_fix_a_seed_and_refine_your_result">生成后在这里检查细节、固定种子，继续优化。</span></p>
                         </div>
                     </div>
                     <div id="result-detail" class="result-detail" hidden></div>
                     <div id="result-actions" class="actions"></div>
                 </section>
                 <section id="compare-view" class="viewer" hidden>
-                    <p class="muted">
-                        从作品中设置 A 与
-                        B。先固定种子，再只改变一个参数；不同尺寸的图片按比例展示。
-                    </p>
-                    <label for="compare-zoom">细节检查</label
-                    ><select id="compare-zoom">
-                        <option value="fit">适应窗口</option>
-                        <option value="1">原始像素 100%</option>
-                        <option value="2">放大 200%</option>
+                    <p class="muted"><span data-i18n="ui.set_results_as_a_and_b_fix_the_seed_then_change_one_parameter_dif">从作品中设置 A 与 B。先固定种子，再只改变一个参数；不同尺寸的图片按比例展示。</span></p>
+                    <label for="compare-zoom"><span data-i18n="ui.inspect_details">细节检查</span></label><select id="compare-zoom">
+                        <option value="fit" data-i18n="ui.fit_to_view">适应窗口</option>
+                        <option value="1" data-i18n="ui.actual_pixels_100">原始像素 100%</option>
+                        <option value="2" data-i18n="ui.zoom_200">放大 200%</option>
                     </select>
-                    <p class="hint">
-                        放大后滚动任意一侧，两张图片同步移动到相同比例的位置。
-                    </p>
+                    <p class="hint"><span data-i18n="ui.when_zoomed_scrolling_either_image_moves_both_to_the_same_relativ">放大后滚动任意一侧，两张图片同步移动到相同比例的位置。</span></p>
                     <div id="compare-images" class="compare-images"></div>
                     <div class="table-scroll">
                         <table id="compare-table"></table>
@@ -161,16 +124,16 @@
                 </section>
                 <section class="history-section">
                     <div class="section-heading">
-                        <h3>作品档案</h3>
-                        <button id="refresh" class="text-button">刷新</button>
+                        <h3><span data-i18n="ui.result_library">作品档案</span></h3>
+                        <button id="refresh" class="text-button"><span data-i18n="ui.refresh">刷新</span></button>
                     </div>
                     <div id="gallery" class="gallery"></div>
-                    <button id="more" class="quiet" hidden>加载更多</button>
+                    <button id="more" class="quiet" hidden><span data-i18n="ui.load_more">加载更多</span></button>
                 </section>
                 <section>
                     <div class="section-heading">
-                        <h3>任务队列</h3>
-                        <small>与快速创作共享</small>
+                        <h3><span data-i18n="ui.task_queue">任务队列</span></h3>
+                        <small><span data-i18n="ui.shared_with_creation_studio">与快速创作共享</span></small>
                     </div>
                     <div id="batches" class="batches"></div>
                     <div id="jobs" class="jobs"></div>
@@ -178,68 +141,57 @@
             </main>
             <aside class="inspector">
                 <div class="inspector-heading">
-                    <h2>参数编辑器</h2>
-                    <span id="draft-status" class="muted">草稿自动保存</span>
+                    <h2><span data-i18n="ui.parameter_editor">参数编辑器</span></h2>
+                    <span id="draft-status" class="muted"><span data-i18n="ui.draft_saves_automatically">草稿自动保存</span></span>
                 </div>
                 <form id="parameters">
                     <section id="input-section">
-                        <div class="section-label">01 / 输入与参考</div>
-                        <label for="mode">创作模式</label
-                        ><select id="mode">
-                            <option value="text">文字生成图片</option>
-                            <option value="edit">参考图编辑</option>
-                            <option value="transparent">透明 PNG</option>
+                        <div class="section-label"><span data-i18n="ui.01_input_and_references">01 / 输入与参考</span></div>
+                        <label for="mode"><span data-i18n="ui.creation_mode">创作模式</span></label><select id="mode">
+                            <option value="text" data-i18n="ui.text_to_image_75c21">文字生成图片</option>
+                            <option value="edit" data-i18n="ui.reference_editing">参考图编辑</option>
+                            <option value="transparent" data-i18n="ui.transparent_png">透明 PNG</option>
                         </select>
                         <label for="prompt"
-                            >正面提示词 <span>描述目标画面</span></label
-                        ><textarea
+                            ><span data-i18n="ui.positive_prompt">正面提示词</span><span><span data-i18n="ui.describe_the_target_image">描述目标画面</span></span></label><textarea
                             id="prompt"
                             rows="6"
                             maxlength="6000"
                             required
                             placeholder="主体、场景、构图、光线、材质，以及希望保留的细节…"
-                        ></textarea>
+                         data-i18n-placeholder="ui.subject_scene_composition_lighting_materials_and_details_to_prese"></textarea>
                         <div id="reference-box" hidden>
                             <label for="upload"
-                                >参考图片
-                                <span>按图1、图2、图3描述</span></label
-                            ><input
+                                ><span data-i18n="ui.reference_images">参考图片</span><span><span data-i18n="ui.refer_to_image_1_image_2_image_3">按图1、图2、图3描述</span></span></label><input
                                 id="upload"
                                 type="file"
                                 accept="image/png,image/jpeg,image/webp"
                                 multiple
                             />
                             <div id="references" class="references"></div>
-                            <label for="resolution">参考图处理大小</label
-                            ><select id="resolution">
+                            <label for="resolution"><span data-i18n="ui.reference_processing_size">参考图处理大小</span></label><select id="resolution">
                                 <option>512</option>
                                 <option selected>768</option>
                                 <option>1024</option>
                             </select>
-                            <p class="hint">
-                                输出跟随图1比例。可调整参考顺序；原生编辑不提供像素锁定。
-                            </p>
+                            <p class="hint"><span data-i18n="ui.output_follows_image_1_s_aspect_ratio_reorder_references_as_neede">输出跟随图1比例。可调整参考顺序；原生编辑不提供像素锁定。</span></p>
                         </div>
                         <details>
-                            <summary>负面提示词</summary>
+                            <summary><span data-i18n="ui.negative_prompt">负面提示词</span></summary>
                             <textarea
                                 id="negative_prompt"
                                 rows="3"
                                 maxlength="6000"
                                 placeholder="仅在 CFG 大于 1 时参与条件引导"
-                            ></textarea>
-                            <p class="hint">
-                                默认 CFG=1 不使用负条件采样；提高 CFG
-                                不保证更好效果。
-                            </p>
+                             data-i18n-placeholder="ui.used_for_guidance_only_when_cfg_is_greater_than_1"></textarea>
+                            <p class="hint"><span data-i18n="ui.cfg_1_does_not_use_negative_conditioning_increasing_cfg_does_not">默认 CFG=1 不使用负条件采样；提高 CFG 不保证更好效果。</span></p>
                         </details>
                     </section>
                     <section id="sampling-section">
-                        <div class="section-label">02 / 条件与采样</div>
+                        <div class="section-label"><span data-i18n="ui.02_conditioning_and_sampling">02 / 条件与采样</span></div>
                         <div class="pair">
                             <div>
-                                <label for="steps">采样步数</label
-                                ><input
+                                <label for="steps"><span data-i18n="ui.sampling_steps">采样步数</span></label><input
                                     id="steps"
                                     type="number"
                                     min="1"
@@ -249,8 +201,7 @@
                                 />
                             </div>
                             <div>
-                                <label for="cfg">CFG 引导</label
-                                ><input
+                                <label for="cfg"><span data-i18n="ui.cfg_guidance">CFG 引导</span></label><input
                                     id="cfg"
                                     type="number"
                                     min="1"
@@ -261,35 +212,33 @@
                                 />
                             </div>
                         </div>
-                        <p class="hint">20步选构图，40步成图；CFG从1开始。</p>
+                        <p class="hint"><span data-i18n="ui.20_steps_for_composition_40_for_final_output_start_with_cfg_1">20步选构图，40步成图；CFG从1开始。</span></p>
                         <div class="pair">
                             <div>
-                                <label for="sampler">采样器</label
-                                ><select id="sampler">
-                                    <option value="euler">Euler · 推荐</option>
-                                    <option value="heun">Heun · 实验</option>
-                                    <option value="dpmpp_2m">
+                                <label for="sampler"><span data-i18n="ui.sampler">采样器</span></label><select id="sampler">
+                                    <option value="euler" data-i18n="ui.euler_recommended">Euler · 推荐</option>
+                                    <option value="heun" data-i18n="ui.heun_experimental">Heun · 实验</option>
+                                    <option value="dpmpp_2m" data-i18n="ui.dpm_2m_experimental">
                                         DPM++ 2M · 实验
                                     </option>
                                 </select>
                             </div>
                             <div>
-                                <label for="scheduler">调度器</label
-                                ><select id="scheduler">
-                                    <option value="simple">
+                                <label for="scheduler"><span data-i18n="ui.scheduler">调度器</span></label><select id="scheduler">
+                                    <option value="simple" data-i18n="ui.simple_recommended">
                                         Simple · 推荐
                                     </option>
-                                    <option value="normal">
+                                    <option value="normal" data-i18n="ui.normal_experimental">
                                         Normal · 实验
                                     </option>
-                                    <option value="beta">Beta · 实验</option>
-                                    <option value="karras">
+                                    <option value="beta" data-i18n="ui.beta_experimental">Beta · 实验</option>
+                                    <option value="karras" data-i18n="ui.karras_experimental">
                                         Karras · 实验
                                     </option>
                                 </select>
                             </div>
                         </div>
-                        <label for="seed">随机种子</label>
+                        <label for="seed"><span data-i18n="ui.random_seed">随机种子</span></label>
                         <div class="seed-row">
                             <input
                                 id="seed"
@@ -303,37 +252,31 @@
                                 type="button"
                                 class="quiet"
                                 title="设为每次随机"
-                            >
-                                随机
-                            </button>
+                             data-i18n-title="ui.use_a_random_seed_each_time"><span data-i18n="ui.random">随机</span></button>
                         </div>
-                        <p class="hint">
-                            -1每次随机。对比参数时使用同一个固定数字。
-                        </p>
+                        <p class="hint"><span data-i18n="ui.1_picks_a_random_seed_use_the_same_fixed_number_for_parameter_com">-1每次随机。对比参数时使用同一个固定数字。</span></p>
                     </section>
                     <section id="output-section">
-                        <div class="section-label">03 / 画布与资源</div>
+                        <div class="section-label"><span data-i18n="ui.03_canvas_and_resources">03 / 画布与资源</span></div>
                         <div id="canvas-size">
-                            <label for="size">画幅预设</label
-                            ><select id="size">
-                                <option value="1024,1024">
+                            <label for="size"><span data-i18n="ui.canvas_preset">画幅预设</span></label><select id="size">
+                                <option value="1024,1024" data-i18n="ui.square_1024_1024">
                                     方形 · 1024 × 1024
                                 </option>
-                                <option value="832,1216">
+                                <option value="832,1216" data-i18n="ui.portrait_832_1216">
                                     竖图 · 832 × 1216
                                 </option>
-                                <option value="1216,832">
+                                <option value="1216,832" data-i18n="ui.landscape_1216_832">
                                     横图 · 1216 × 832
                                 </option>
-                                <option value="768,768">
+                                <option value="768,768" data-i18n="ui.explore_768_768">
                                     快速探索 · 768 × 768
                                 </option>
-                                <option value="custom">自定义</option>
+                                <option value="custom" data-i18n="ui.custom">自定义</option>
                             </select>
                             <div class="pair">
                                 <div>
-                                    <label for="width">宽</label
-                                    ><input
+                                    <label for="width"><span data-i18n="server.width">宽</span></label><input
                                         id="width"
                                         type="number"
                                         min="512"
@@ -344,8 +287,7 @@
                                     />
                                 </div>
                                 <div>
-                                    <label for="height">高</label
-                                    ><input
+                                    <label for="height"><span data-i18n="server.height">高</span></label><input
                                         id="height"
                                         type="number"
                                         min="512"
@@ -358,52 +300,44 @@
                             </div>
                         </div>
                         <details>
-                            <summary>缓存与解码</summary>
-                            <label for="cache_dtype">KV 缓存精度</label
-                            ><select id="cache_dtype">
-                                <option value="auto">
+                            <summary><span data-i18n="ui.cache_and_decoding">缓存与解码</span></summary>
+                            <label for="cache_dtype"><span data-i18n="ui.kv_cache_precision">KV 缓存精度</span></label><select id="cache_dtype">
+                                <option value="auto" data-i18n="ui.auto_default_for_text_int8_for_edits">
                                     自动 · 文生图default / 改图int8
                                 </option>
-                                <option value="default">
+                                <option value="default" data-i18n="ui.default_unquantized_cache">
                                     Default · 无损缓存
                                 </option>
-                                <option value="int8">
+                                <option value="int8" data-i18n="ui.int8_smaller_cache">
                                     INT8 · 减少缓存占用
                                 </option>
-                                <option value="int4">
+                                <option value="int4" data-i18n="ui.int4_experimental_reduced_precision">
                                     INT4 · 实验，有精度损失
-                                </option></select
-                            ><label for="cache_device">缓存位置</label
-                            ><select id="cache_device">
-                                <option value="auto">自动分配 · 推荐</option>
-                                <option value="cpu">CPU / 系统内存</option>
-                                <option value="gpu">强制 GPU</option>
-                                <option value="off">
+                                </option></select><label for="cache_device"><span data-i18n="ui.cache_location">缓存位置</span></label><select id="cache_device">
+                                <option value="auto" data-i18n="ui.auto_recommended">自动分配 · 推荐</option>
+                                <option value="cpu" data-i18n="ui.cpu_system_ram">CPU / 系统内存</option>
+                                <option value="gpu" data-i18n="ui.force_gpu">强制 GPU</option>
+                                <option value="off" data-i18n="ui.disable_cache_diagnostics">
                                     关闭缓存 · 诊断用
-                                </option></select
-                            ><label for="tile_size">VAE 解码分块</label
-                            ><select id="tile_size">
-                                <option value="256">256 · 小分块</option>
-                                <option value="512" selected>512 · 推荐</option>
-                                <option value="768">768 · 大分块</option>
+                                </option></select><label for="tile_size"><span data-i18n="ui.vae_decode_tile_size">VAE 解码分块</span></label><select id="tile_size">
+                                <option value="256" data-i18n="ui.256_small_tiles">256 · 小分块</option>
+                                <option value="512" selected data-i18n="ui.512_recommended">512 · 推荐</option>
+                                <option value="768" data-i18n="ui.768_large_tiles">768 · 大分块</option>
                             </select>
-                            <p class="hint">
-                                这些选项控制缓存和解码资源，不会改变模型权重量化。更大分块可能增加显存需求。
-                            </p>
+                            <p class="hint"><span data-i18n="ui.these_settings_control_cache_and_decoding_resources_not_model_wei">这些选项控制缓存和解码资源，不会改变模型权重量化。更大分块可能增加显存需求。</span></p>
                         </details>
                     </section>
                     <section id="batch-section">
-                        <div class="section-label">04 / 批量与实验</div>
-                        <label for="run-kind">提交方式</label>
+                        <div class="section-label"><span data-i18n="ui.04_batches_and_experiments">04 / 批量与实验</span></div>
+                        <label for="run-kind"><span data-i18n="ui.submission_mode">提交方式</span></label>
                         <select id="run-kind">
-                            <option value="single">单张生成</option>
-                            <option value="seeds">连续换种子</option>
-                            <option value="experiment">单变量对比实验</option>
+                            <option value="single" data-i18n="ui.single_image">单张生成</option>
+                            <option value="seeds" data-i18n="ui.sequential_seeds">连续换种子</option>
+                            <option value="experiment" data-i18n="ui.one_parameter_experiment">单变量对比实验</option>
                         </select>
                         <div id="batch-options" hidden>
                             <div id="batch-count-box">
-                                <label for="batch-count">图片数量</label
-                                ><input
+                                <label for="batch-count"><span data-i18n="ui.image_count">图片数量</span></label><input
                                     id="batch-count"
                                     type="number"
                                     min="2"
@@ -412,63 +346,47 @@
                                 />
                             </div>
                             <div id="experiment-options" hidden>
-                                <label for="batch-axis">只改变一个参数</label
-                                ><select id="batch-axis">
-                                    <option value="steps">步数</option>
-                                    <option value="cfg">CFG 引导</option>
-                                    <option value="sampler">采样器</option>
-                                    <option value="scheduler">调度器</option>
-                                    <option value="cache_dtype">
+                                <label for="batch-axis"><span data-i18n="ui.change_one_parameter">只改变一个参数</span></label><select id="batch-axis">
+                                    <option value="steps" data-i18n="server.steps">步数</option>
+                                    <option value="cfg" data-i18n="ui.cfg_guidance">CFG 引导</option>
+                                    <option value="sampler" data-i18n="ui.sampler">采样器</option>
+                                    <option value="scheduler" data-i18n="ui.scheduler">调度器</option>
+                                    <option value="cache_dtype" data-i18n="ui.cache_precision">
                                         缓存精度
                                     </option>
-                                    <option value="tile_size">
+                                    <option value="tile_size" data-i18n="ui.vae_tiles">
                                         VAE 分块
-                                    </option></select
-                                ><label for="batch-values"
-                                    >实验值（英文逗号分隔）</label
-                                ><input id="batch-values" value="20, 30, 40" />
+                                    </option></select><label for="batch-values"
+                                    ><span data-i18n="ui.experiment_values_comma_separated">实验值（英文逗号分隔）</span></label><input id="batch-values" value="20, 30, 40" />
                             </div>
                             <p id="batch-hint" class="hint"></p>
-                            <p class="hint">
-                                单个模型后端依次执行；提交后可以离开页面。队列与创作画室共享，整组参数在提交时固定。
-                            </p>
+                            <p class="hint"><span data-i18n="ui.the_backend_runs_tasks_sequentially_you_may_leave_the_page_after">单个模型后端依次执行；提交后可以离开页面。队列与创作画室共享，整组参数在提交时固定。</span></p>
                         </div>
                     </section>
                 </form>
                 <div class="run-panel">
                     <div class="section-heading">
-                        <div id="run-summary">40步 · 1024 × 1024</div>
+                        <div id="run-summary"><span data-i18n="ui.40_steps_1024_1024">40步 · 1024 × 1024</span></div>
                         <button
                             id="batch-shortcut"
                             type="button"
                             class="text-button"
-                        >
-                            批量 / 实验
-                        </button>
+                        ><span data-i18n="ui.batch_experiment">批量 / 实验</span></button>
                     </div>
-                    <button id="run" class="primary" disabled>
-                        运行工作流 <span>↗</span></button
-                    ><button id="retry" class="quiet" hidden>
-                        重试同一次提交</button
-                    ><progress id="progress" hidden></progress>
-                    <p id="message" role="status" aria-live="polite">
-                        准备就绪
-                    </p>
+                    <button id="run" class="primary" disabled><span data-i18n="ui.run_workflow_9fa7b">运行工作流</span><span>↗</span></button><button id="retry" class="quiet" hidden><span data-i18n="ui.retry_same_submission">重试同一次提交</span></button><progress id="progress" hidden></progress>
+                    <p id="message" role="status" aria-live="polite"><span data-i18n="ui.ready">准备就绪</span></p>
                     <div id="active-actions" class="actions"></div>
                 </div>
             </aside>
         </div>
         <dialog id="graph-dialog">
             <div class="section-heading">
-                <h3>编译后的工作流</h3>
-                <button id="close-dialog" class="quiet">关闭</button>
+                <h3><span data-i18n="ui.compiled_workflow">编译后的工作流</span></h3>
+                <button id="close-dialog" class="quiet"><span data-i18n="ui.close">关闭</span></button>
             </div>
-            <p class="muted">
-                与实际提交使用同一构建器。随机种子在运行时确定；这是 API
-                节点图，可导出供高级调试。
-            </p>
+            <p class="muted"><span data-i18n="ui.uses_the_same_builder_as_actual_submissions_random_seeds_are_reso">与实际提交使用同一构建器。随机种子在运行时确定；这是 API 节点图，可导出供高级调试。</span></p>
             <pre id="graph-json"></pre>
-            <button id="export-graph">导出 API JSON</button>
+            <button id="export-graph"><span data-i18n="ui.export_api_json">导出 API JSON</span></button>
         </dialog>
     </body>
 </html>

@@ -13,7 +13,7 @@ def main():
     errors=[]
     with sync_playwright() as p:
         browser=p.chromium.launch(headless=True,args=['--disable-gpu'])
-        page=browser.new_page(viewport={'width':1440,'height':1100})
+        page=browser.new_page(locale="zh-CN",viewport={'width':1440,'height':1100})
         page.on('pageerror',lambda e:errors.append(str(e)))
         page.goto(URL)
         page.wait_for_function("document.querySelector('#health').textContent.includes('已连接')")

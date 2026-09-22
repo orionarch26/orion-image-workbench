@@ -145,3 +145,20 @@ class APITests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(reopened.batches()[0],batch)
             self.assertEqual([reopened.get(i)['payload']['seed'] for i in batch['job_ids']],[0,1,2])
         finally: reopened.close()
+
+    async def test_bilingual_guides_and_locale_assets(self):
+        for page in ('guide','pro','workflow','research','validation','installation'):
+            response=await self.client.get('/help/'+page+'?lang=en')
+            self.assertEqual(response.status,200)
+            self.assertIn('data-guide-locale="en"',await response.text())
+        response=await self.client.get('/help/pro?lang=en')
+        self.assertIn('Professional workbench guide',await response.text())
+        response=await self.client.get('/help/pro?lang=zh-CN')
+        self.assertIn('专业工作台使用指南',await response.text())
+        for name in ('i18n.js','locales.js'):
+            self.assertEqual((await self.client.get('/static/'+name)).status,200)
+        response=await self.client.post('/api/pro/preview',json={'prompt':'cat','steps':0})
+        data=await response.json()
+        self.assertEqual(response.status,400)
+        self.assertEqual(data['error'],'步数需为1–60')
+        self.assertTrue(data['error_key'].startswith('server.'))

@@ -2,7 +2,17 @@
 
 ## Unreleased
 
-Changes after v0.1.0 will be listed here.
+Changes after v0.2.0 will be listed here.
+
+## 0.2.0 — 2026-09-22
+
+- Added English / Simplified Chinese UI and persistent language selection across creation, workbench and guides.
+- Localized navigation, parameters, batches, recipe history, comparison, task stages and known validation messages.
+- Preserved user text, references, drafts, pending request IDs and active tasks during language switches.
+- Added English in-app guides, stable API error descriptors and translation catalog checks.
+- Added browser regression coverage for both languages, active/pending tasks and mobile layouts.
+
+Full Windows application support and LLM assistance are not included. The original v0.1.0 baseline remains available unchanged.
 
 ## 0.1.0 — 2026-09-22
 

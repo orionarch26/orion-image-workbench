@@ -15,6 +15,7 @@ from .workflow import normalize, build_workflow, PRO_DEFAULTS, PRO_OPTIONS
 from .pro import preview, save_preset
 from .navigation import header
 from .batches import prepare
+from .i18n import error_payload
 
 STORE=web.AppKey('store',Store)
 MANAGER=web.AppKey('manager',Manager)
@@ -39,15 +40,15 @@ def create_app(port=7860,state=STATE,output=OUTPUT,client=None,start_worker=True
         try:
             return await handler(req)
         except CapacityError as exc:
-            return web.json_response({'error':str(exc)},status=429)
+            return web.json_response(error_payload(exc),status=429)
         except ConflictError as exc:
-            return web.json_response({'error':str(exc)},status=409)
+            return web.json_response(error_payload(exc),status=409)
         except (ValueError,TypeError) as exc:
-            return web.json_response({'error':str(exc)},status=400)
+            return web.json_response(error_payload(exc),status=400)
         except FileNotFoundError:
             raise web.HTTPNotFound()
         except KeyError:
-            return web.json_response({'error':'任务不存在'},status=404)
+            return web.json_response(error_payload('任务不存在'),status=404)
 
     async def lifecycle(app):
         # Cross-process lock is held for the lifetime of this database owner.
@@ -68,7 +69,7 @@ def create_app(port=7860,state=STATE,output=OUTPUT,client=None,start_worker=True
 
     async def static(req):
         name=req.match_info['name']
-        if name not in ('app.js','style.css','pro.js','pro.css'):
+        if name not in ('app.js','style.css','pro.js','pro.css','i18n.js','locales.js'):
             raise web.HTTPNotFound()
         response=web.FileResponse(ROOT/'web'/name)
         response.headers['Cache-Control']='no-cache'
@@ -208,16 +209,30 @@ def create_app(port=7860,state=STATE,output=OUTPUT,client=None,start_worker=True
         return web.FileResponse(path)
 
     async def guide(req):
-        names={'guide':'GUIDE.md','workflow':'WORKFLOW.md','research':'docs/RESEARCH.md','validation':'docs/OPTIMIZATION_VALIDATION.md','pro':'docs/PRO_GUIDE.md'}
+        names={'installation':'docs/zh-CN/installation.md','guide':'GUIDE.md','workflow':'WORKFLOW.md','research':'docs/RESEARCH.md','validation':'docs/OPTIMIZATION_VALIDATION.md','pro':'docs/PRO_GUIDE.md'}
         key=req.match_info.get('page','guide')
         if key not in names: raise web.HTTPNotFound()
-        path=ROOT/names[key]
+        locale=req.query.get('lang','zh-CN')
+        if locale not in ('en','zh-CN'): locale='en'
+        english={'guide':'docs/en/guide.md','workflow':'docs/en/workflow.md','pro':'docs/en/workbench.md',
+                 'installation':'docs/en/installation.md','research':'docs/RESEARCH.md','validation':'docs/OPTIMIZATION_VALIDATION.md'}
+        chinese={'research':'docs/zh-CN/research.md','validation':'docs/zh-CN/validation.md'}
+        path=ROOT/(english[key] if locale=='en' else chinese.get(key,names[key]))
         if not path.exists(): raise web.HTTPNotFound()
         content=MarkdownIt('commonmark',{'html':False}).enable('table').render(path.read_text())
         # Link common local documentation to the in-app routes.
         for source,target in [('docs/RESEARCH.md','/help/research'),('WORKFLOW.md','/help/workflow'),('GUIDE.md','/help/guide'),('docs/VALIDATION.md','/help/validation'),('docs/OPTIMIZATION_VALIDATION.md','/help/validation')]:
             content=content.replace('href="'+source+'"','href="'+target+'"')
-        return web.Response(text='<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>使用指南</title><link rel="stylesheet" href="/static/style.css">'+header('help')+'<main class="help"><a href="/">← 返回画室</a>'+content+'</main></html>',content_type='text/html')
+        local_links={'installation.md':'installation','docs/en/installation.md':'installation','docs/zh-CN/installation.md':'installation',
+                     'zh-CN/installation.md':'installation','workbench.md':'pro','docs/PRO_GUIDE.md':'pro',
+                     'workflow.md':'workflow','guide.md':'guide'}
+        for source,target in local_links.items():
+            content=content.replace('href="'+source+'"','href="/help/'+target+'?lang='+locale+'"')
+        for source,target in [('testing.md','docs/testing.md'),('../testing.md','docs/testing.md'),
+                              ('../runtime/models.json','runtime/models.json'),('../../runtime/models.json','runtime/models.json'),
+                              ('../THIRD_PARTY_NOTICES.md','THIRD_PARTY_NOTICES.md'),('../../THIRD_PARTY_NOTICES.md','THIRD_PARTY_NOTICES.md')]:
+            content=content.replace('href="'+source+'"','href="https://github.com/orionarch26/orion-image-workbench/blob/main/'+target+'"')
+        return web.Response(text='<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title data-i18n="nav.help_title">使用指南</title><link rel="stylesheet" href="/static/style.css"><script src="/static/locales.js" defer></script><script src="/static/i18n.js" defer></script>'+header('help')+'<main class="help"><a href="/" data-i18n="nav.help_back">← 返回画室</a><article data-guide-page="'+key+'" data-guide-locale="'+locale+'">'+content+'</article></main></html>',content_type='text/html')
 
     app=web.Application(client_max_size=21*1024**2,middlewares=[local_only])
     app[STORE]=store;app[MANAGER]=manager;app[ASSETS]=assets

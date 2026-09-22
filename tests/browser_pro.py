@@ -12,7 +12,7 @@ def main():
     args=argparse.ArgumentParser();args.add_argument('--generate',action='store_true');args=args.parse_args()
     with sync_playwright() as pw, tempfile.TemporaryDirectory() as temp:
         browser=pw.chromium.launch(headless=True,args=['--disable-gpu'])
-        page=browser.new_page(viewport={'width':1600,'height':1050},accept_downloads=True)
+        page=browser.new_page(locale="zh-CN",viewport={'width':1600,'height':1050},accept_downloads=True)
         errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
         page.goto('http://127.0.0.1:7860/pro')
         page.wait_for_function("!document.querySelector('#run').disabled")

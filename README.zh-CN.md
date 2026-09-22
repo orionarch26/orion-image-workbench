@@ -1,6 +1,6 @@
 # Orion Image Workbench · 猎户画室
 
-**固定版本：[v0.1.0](https://github.com/orionarch26/orion-image-workbench/releases/tag/v0.1.0)** · [版本说明](docs/releases/v0.1.0.md)。`main` 用于后续开发。
+**固定版本：[v0.2.0](https://github.com/orionarch26/orion-image-workbench/releases/tag/v0.2.0)** · [版本说明](docs/releases/v0.2.0.md)。`main` 用于后续开发。
 
 **本地生图、批量创作与可复现的工作流实验。**
 
@@ -16,7 +16,7 @@
 
 - **已实测**：Linux、RTX 4070 Laptop 8GB、16GB内存。
 - **Windows**：模型下载脚本采用跨平台Python标准库，提供Windows/Linux、Python 3.10 / 3.12测试矩阵；完整应用仍有Linux平台依赖，尚未宣称支持。
-- **语言**：当前界面为中文，README与安装说明已有中英文；完整界面i18n在路线图中。
+- **语言**：应用界面、内置指南、README 与安装说明支持中英文。导航栏可切换 English / 简体中文，并记住选择。
 - 这是首个源码版本。模型下载器只安装模型文件，ComfyUI、PyTorch、驱动与节点环境需按安装说明准备。
 
 ## 准备好的Linux环境快速使用
@@ -24,7 +24,7 @@
 前置条件：Git、Python 3.12、兼容NVIDIA驱动，以及安装说明中的 `ComfyUI/.venv` 和节点。首次clone请先阅读[完整安装说明](docs/zh-CN/installation.md)。
 
 ```bash
-git clone --branch v0.1.0 --depth 1 https://github.com/orionarch26/orion-image-workbench.git
+git clone --branch v0.2.0 --depth 1 https://github.com/orionarch26/orion-image-workbench.git
 cd orion-image-workbench
 
 # 先按安装说明准备ComfyUI环境，再查看模型清单：
@@ -95,3 +95,7 @@ python3 -m venv .venv
 普通测试使用模拟后端，不下载模型、不运行GPU生成。详见[测试说明](docs/testing.md)、[贡献指南](CONTRIBUTING.md)、[路线图](ROADMAP.md)。
 
 独立应用代码采用 [Apache-2.0](LICENSE)。模型采用 [Qwen Research License](https://huggingface.co/Qwen/Qwen-Image-2.1/blob/main/LICENSE)，非商业用途限定研究评估，商业使用需另行许可。上游代码与补丁归属见[第三方声明](THIRD_PARTY_NOTICES.md)。本项目不是Qwen或ComfyUI官方产品。
+
+## 界面语言
+
+导航栏选择 English / 简体中文。首次按浏览器语言选择；中文语言使用简体中文，其他语言默认英文。切换不刷新页面，不修改提示词、预设名称、种子、参考图、已提交任务或未确认提交的请求ID。历史记录保持原文，命令行诊断及第三方原始错误可能仍使用原语言。
